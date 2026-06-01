@@ -1,0 +1,160 @@
+import { useEffect, useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Save } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { supabase } from '../../lib/supabase'
+import { useSettings } from '../../hooks/useSettings'
+
+interface FormState {
+  whatsapp_number: string
+  delivery_cost: string
+  min_order: string
+  store_name: string
+}
+
+const EMPTY: FormState = {
+  whatsapp_number: '',
+  delivery_cost: '',
+  min_order: '',
+  store_name: '',
+}
+
+export default function AdminSettings() {
+  const qc = useQueryClient()
+  const { data: settings, isLoading } = useSettings()
+  const [form, setForm] = useState<FormState>(EMPTY)
+
+  useEffect(() => {
+    if (settings) setForm(settings)
+  }, [settings])
+
+  const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }))
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const entries = Object.entries(form) as [string, string][]
+      for (const [key, value] of entries) {
+        const { error } = await supabase
+          .from('settings')
+          .update({ value })
+          .eq('key', key)
+        if (error) throw error
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['settings'] })
+      toast.success('Configuración guardada')
+    },
+    onError: () => toast.error('Error al guardar'),
+  })
+
+  return (
+    <div className="p-8 max-w-2xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-black text-stone-100 uppercase tracking-tight">
+          Configuración
+        </h1>
+        <p className="text-stone-600 text-sm mt-1">
+          Parámetros generales del negocio.
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-16">
+          <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+        </div>
+      ) : (
+        <form
+          onSubmit={(e) => { e.preventDefault(); saveMutation.mutate() }}
+          className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-6 space-y-5"
+        >
+          <Field
+            label="Nombre del negocio"
+            hint="Aparece en el mensaje de WhatsApp al cliente"
+          >
+            <input
+              value={form.store_name}
+              onChange={set('store_name')}
+              placeholder="Alta GULA Delivery"
+              className={inputClass}
+            />
+          </Field>
+
+          <Field
+            label="Número de WhatsApp"
+            hint="Formato internacional sin + ni espacios: 549XXXXXXXXXX"
+          >
+            <input
+              value={form.whatsapp_number}
+              onChange={set('whatsapp_number')}
+              placeholder="5491112345678"
+              className={inputClass}
+            />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Costo de delivery ($)" hint="Dejar vacío si varía">
+              <input
+                type="number"
+                value={form.delivery_cost}
+                onChange={set('delivery_cost')}
+                placeholder="1500"
+                className={inputClass}
+                min="0"
+              />
+            </Field>
+
+            <Field label="Pedido mínimo ($)" hint="Dejar vacío para sin mínimo">
+              <input
+                type="number"
+                value={form.min_order}
+                onChange={set('min_order')}
+                placeholder="1000"
+                className={inputClass}
+                min="0"
+              />
+            </Field>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={saveMutation.isPending}
+              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400
+                text-white font-black px-6 py-3 rounded-xl text-sm uppercase
+                tracking-widest transition-colors disabled:opacity-50"
+            >
+              <Save size={16} />
+              {saveMutation.isPending ? 'Guardando...' : 'Guardar configuración'}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  )
+}
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string
+  hint?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-[11px] font-black text-stone-500 uppercase tracking-widest">
+        {label}
+      </label>
+      {children}
+      {hint && <p className="text-[11px] text-stone-700">{hint}</p>}
+    </div>
+  )
+}
+
+const inputClass =
+  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
