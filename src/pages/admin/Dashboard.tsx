@@ -52,7 +52,7 @@ function useStats() {
         .lte('stock', 5)
         .order('stock', { ascending: true })
         .limit(20)
-      return (data ?? []) as CriticalProduct[]
+      return (data ?? []) as unknown as CriticalProduct[]
     },
   })
 
