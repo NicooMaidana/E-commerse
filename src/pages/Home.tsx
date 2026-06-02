@@ -34,7 +34,7 @@ export default function Home() {
     : undefined
 
   const description =
-    'Los mejores productos llegando hasta tu puerta. Rápido, caliente y con todo el sabor que buscás.'
+    'Golosinas, bebidas y snacks llegando hasta tu puerta. Pedí por WhatsApp y recibís en minutos.'
 
   return (
     <>
@@ -140,14 +140,32 @@ function HeroSection({
             <div className="relative w-72 h-72 rounded-full border border-orange-900/30 bg-[#1e1008] flex items-center justify-center">
               <div className="w-52 h-52 rounded-full border border-orange-800/30 bg-[#261508] flex items-center justify-center">
                 <div className="text-center leading-none">
-                  <div className="text-7xl font-black text-orange-500 tracking-tighter">AG</div>
-                  <div className="text-xs font-black text-yellow-400 uppercase tracking-[0.3em] mt-2">Delivery</div>
+                  <div className="text-7xl font-black tracking-tighter">
+                    <span className="text-orange-500">A</span>
+                    <span className="text-yellow-400">G</span>
+                  </div>
+                  <div className="text-base font-black text-stone-100 uppercase tracking-[0.25em] mt-3">
+                    Delivery
+                  </div>
                 </div>
               </div>
             </div>
-            <span className="absolute -top-5 right-4 text-4xl animate-bounce" style={{ animationDuration: '2s' }}>🍔</span>
-            <span className="absolute -bottom-4 left-2 text-3xl animate-bounce" style={{ animationDuration: '2.4s', animationDelay: '0.4s' }}>🌮</span>
-            <span className="absolute top-1/2 -right-6 -translate-y-1/2 text-3xl animate-bounce" style={{ animationDuration: '1.8s', animationDelay: '0.8s' }}>🍟</span>
+            {/* Top */}
+            <span className="absolute -top-8 right-8 text-5xl float-b select-none" style={{ '--dur': '2.8s', animationDelay: '0s' } as React.CSSProperties}>🍭</span>
+            <span className="absolute -top-3 left-12 text-2xl float-e select-none" style={{ '--dur': '3.1s', animationDelay: '0.5s' } as React.CSSProperties}>🍬</span>
+
+            {/* Right */}
+            <span className="absolute top-1/4 -right-10 text-4xl float-a select-none" style={{ '--dur': '2.4s', animationDelay: '0.8s' } as React.CSSProperties}>🥤</span>
+            <span className="absolute top-2/3 -right-4 text-xl float-d select-none"  style={{ '--dur': '3.4s', animationDelay: '1.2s' } as React.CSSProperties}>🧃</span>
+
+            {/* Bottom */}
+            <span className="absolute -bottom-8 left-6 text-4xl float-c select-none" style={{ '--dur': '3s',   animationDelay: '0.3s' } as React.CSSProperties}>🍫</span>
+            <span className="absolute -bottom-4 right-6 text-2xl float-b select-none" style={{ '--dur': '2.6s', animationDelay: '1s'   } as React.CSSProperties}>🍩</span>
+            <span className="absolute -bottom-2 right-24 text-xl float-e select-none" style={{ '--dur': '3.2s', animationDelay: '0.7s' } as React.CSSProperties}>🍪</span>
+
+            {/* Left */}
+            <span className="absolute top-1/2 -left-10 -translate-y-1/2 text-4xl float-d select-none" style={{ '--dur': '2.9s', animationDelay: '0.4s' } as React.CSSProperties}>🍿</span>
+            <span className="absolute top-1/4 -left-5 text-xl float-a select-none" style={{ '--dur': '3.3s', animationDelay: '0.9s' } as React.CSSProperties}>🍦</span>
           </div>
         </div>
       </div>
@@ -191,7 +209,7 @@ function CatalogSection() {
           <h2 className="text-4xl font-black text-stone-100 uppercase tracking-tight">
             Nuestros <span className="text-orange-500">productos</span>
           </h2>
-          <p className="text-stone-600 text-sm mt-1">Todo lo que necesitás, en un solo lugar.</p>
+          <p className="text-stone-600 text-sm mt-1">Golosinas, bebidas, snacks y combos. Todo en un solo lugar.</p>
         </div>
 
         {/* Search */}

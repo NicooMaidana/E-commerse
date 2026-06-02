@@ -8,7 +8,7 @@ const scrollTo = (id: string) => (e: React.MouseEvent) => {
 }
 
 export default function Navbar() {
-  const { totalItems } = useCart()
+  const { totalItems, setIsOpen } = useCart()
   const { data: settings } = useSettings()
 
   const whatsappUrl = settings?.whatsapp_number
@@ -79,11 +79,11 @@ export default function Navbar() {
             </a>
           )}
 
-          {/* Cart → scrolls to #pedido */}
+          {/* Cart → abre el drawer lateral */}
           <button
-            onClick={scrollTo('pedido')}
+            onClick={() => setIsOpen(true)}
             className="relative p-2 text-stone-400 hover:text-orange-400 transition-colors"
-            aria-label="Ir al pedido"
+            aria-label="Abrir carrito"
           >
             <ShoppingCart size={22} />
             {totalItems > 0 && (

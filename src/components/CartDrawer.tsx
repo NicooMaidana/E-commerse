@@ -1,5 +1,4 @@
 import { X, Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 
 const fmt = (n: number) =>
@@ -147,15 +146,19 @@ export default function CartDrawer() {
               </span>
             </div>
 
-            <Link
-              to="/checkout"
-              onClick={() => setIsOpen(false)}
+            <button
+              onClick={() => {
+                setIsOpen(false)
+                setTimeout(() => {
+                  document.getElementById('pedido')?.scrollIntoView({ behavior: 'smooth' })
+                }, 300)
+              }}
               className="block w-full bg-orange-500 hover:bg-orange-400 text-white
                 font-black py-3 rounded-xl text-center text-sm uppercase
                 tracking-widest transition-colors"
             >
               Completar datos del pedido
-            </Link>
+            </button>
 
             <button
               onClick={clearCart}

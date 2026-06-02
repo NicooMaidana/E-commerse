@@ -11,6 +11,40 @@ html {
   to   { transform: translateX(-50%); }
 }
 
+/* Floating emoji animations — each moves differently */
+@keyframes float-a {
+  0%,100% { transform: translateY(0)    rotate(0deg); }
+  30%     { transform: translateY(-14px) rotate(-6deg); }
+  65%     { transform: translateY(-6px)  rotate(4deg); }
+}
+@keyframes float-b {
+  0%,100% { transform: translateY(0)    translateX(0)   rotate(0deg); }
+  25%     { transform: translateY(-10px) translateX(5px) rotate(7deg); }
+  70%     { transform: translateY(-18px) translateX(-3px) rotate(-5deg); }
+}
+@keyframes float-c {
+  0%,100% { transform: translateY(0)   rotate(0deg)  scale(1); }
+  40%     { transform: translateY(-8px) rotate(10deg) scale(1.06); }
+  75%     { transform: translateY(-16px) rotate(-7deg) scale(0.96); }
+}
+@keyframes float-d {
+  0%,100% { transform: translateY(0)    translateX(0); }
+  20%     { transform: translateY(-5px)  translateX(6px)  rotate(-4deg); }
+  55%     { transform: translateY(-20px) translateX(-4px) rotate(6deg); }
+  80%     { transform: translateY(-10px) translateX(3px)  rotate(-2deg); }
+}
+@keyframes float-e {
+  0%,100% { transform: translateY(0)    rotate(0deg); }
+  45%     { transform: translateY(-12px) rotate(-12deg) translateX(-4px); }
+  80%     { transform: translateY(-4px)  rotate(8deg)  translateX(3px); }
+}
+
+.float-a { animation: float-a var(--dur,2.4s) ease-in-out infinite; }
+.float-b { animation: float-b var(--dur,3s)   ease-in-out infinite; }
+.float-c { animation: float-c var(--dur,2.8s) ease-in-out infinite; }
+.float-d { animation: float-d var(--dur,3.2s) ease-in-out infinite; }
+.float-e { animation: float-e var(--dur,2.6s) ease-in-out infinite; }
+
 .ticker-track {
   animation: ticker-scroll 40s linear infinite;
   will-change: transform;
