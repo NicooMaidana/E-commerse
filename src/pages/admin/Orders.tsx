@@ -5,10 +5,11 @@ import {
   CheckCircle2, XCircle, ChevronDown, ChevronUp,
   Search, MapPin, CreditCard, MessageSquare,
   AlertTriangle, X, Loader2, Package2,
-  Minus, Plus, Pencil,
+  Minus, Plus, Pencil, ClipboardList,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { supabase } from '../../lib/supabase'
+import { useSettings } from '../../hooks/useSettings'
 import type { Order, OrderItem } from '../../types'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -60,6 +61,10 @@ function fmtDate(iso: string): string {
   const p = (x: number) => String(x).padStart(2, '0')
   return `${p(d.getDate())}/${p(d.getMonth() + 1)} ${p(d.getHours())}:${p(d.getMinutes())}`
 }
+
+const REF_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+const generateRef = () =>
+  Array.from({ length: 4 }, () => REF_CHARS[Math.floor(Math.random() * REF_CHARS.length)]).join('')
 
 // ── StatusBadge ────────────────────────────────────────────────────────────────
 
@@ -342,10 +347,328 @@ function CancelModal({
   )
 }
 
-// ── EditOrderModal ─────────────────────────────────────────────────────────────
+// ── CreateManualOrderModal ─────────────────────────────────────────────────────
 
 const inp = 'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
   'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm font-medium'
+
+function CreateManualOrderModal({
+  onClose, onCreated,
+}: {
+  onClose: () => void
+  onCreated: (reference: string) => void
+}) {
+  const keyRef = useRef(0)
+  const { data: settings } = useSettings()
+  const deliveryCost = parseFloat(settings?.delivery_cost ?? '') || 0
+  const minOrder     = parseFloat(settings?.min_order ?? '') || 0
+
+  const [nombre,        setNombre]        = useState('')
+  const [envio,         setEnvio]         = useState<'delivery' | 'pickup'>('delivery')
+  const [direccion,     setDireccion]     = useState('')
+  const [comentario,    setComentario]    = useState('')
+  const [pago,          setPago]          = useState<'efectivo' | 'transferencia'>('efectivo')
+  const [items,         setItems]         = useState<EditItem[]>([])
+  const [catalogSearch, setCatalogSearch] = useState('')
+
+  const { data: adminCatalog = [] } = useQuery<AdminCatalogItem[]>({
+    queryKey: ['admin', 'catalog_all'],
+    queryFn: async () => {
+      const [pr, co] = await Promise.all([
+        supabase.from('products').select('id, name, price, stock').eq('visible', true).order('name'),
+        supabase.from('combos').select('id, name, price').eq('visible', true).order('name'),
+      ])
+      return [
+        ...(pr.data ?? []).map(p => ({ id: p.id, type: 'product' as const, name: p.name, price: p.price, stock: p.stock as number })),
+        ...(co.data ?? []).map(c => ({ id: c.id, type: 'combo'   as const, name: c.name, price: c.price })),
+      ]
+    },
+  })
+
+  const catalogResults = useMemo(() =>
+    catalogSearch.length >= 2
+      ? adminCatalog.filter(i => i.name.toLowerCase().includes(catalogSearch.toLowerCase())).slice(0, 8)
+      : [],
+    [catalogSearch, adminCatalog]
+  )
+
+  const subtotal  = items.reduce((s, i) => s + i.unit_price * i.quantity, 0)
+  const shipping  = envio === 'delivery' ? deliveryCost : 0
+  const total     = subtotal + shipping
+  const belowMin  = envio === 'delivery' && minOrder > 0 && subtotal < minOrder
+
+  const addCatalogItem = (item: AdminCatalogItem) => {
+    const key = `new-${keyRef.current++}`
+    setItems(prev => [...prev, {
+      key,
+      product_id: item.type === 'product' ? item.id : null,
+      combo_id:   item.type === 'combo'   ? item.id : null,
+      item_name:  item.name,
+      unit_price: item.price,
+      quantity:   1,
+    }])
+    setCatalogSearch('')
+  }
+
+  const removeItem = (key: string) => setItems(prev => prev.filter(i => i.key !== key))
+  const setQty     = (key: string, qty: number) => {
+    if (qty < 1) return
+    setItems(prev => prev.map(i => i.key === key ? { ...i, quantity: qty } : i))
+  }
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const ref = generateRef()
+      const { data: orderId, error } = await supabase.rpc('create_order_with_items', {
+        p_reference:      ref,
+        p_customer_name:  nombre.trim(),
+        p_delivery_type:  envio,
+        p_address:        envio === 'delivery' ? (direccion.trim() || null) : null,
+        p_comment:        comentario.trim() || null,
+        p_payment_method: pago,
+        p_subtotal:       subtotal,
+        p_delivery_cost:  shipping,
+        p_total:          total,
+        p_source:         'manual',
+        p_items:          items.map(i => ({
+          product_id: i.product_id,
+          combo_id:   i.combo_id,
+          item_name:  i.item_name,
+          unit_price: i.unit_price,
+          quantity:   i.quantity,
+          line_total: i.unit_price * i.quantity,
+        })),
+      })
+      if (error) throw error
+      return { ref, orderId: orderId as string }
+    },
+    onSuccess: ({ ref }) => onCreated(ref),
+    onError: (e: Error) => toast.error(e.message || 'Error al crear el pedido'),
+  })
+
+  const canSave = items.length > 0 &&
+    nombre.trim() !== '' &&
+    (envio === 'pickup' || direccion.trim() !== '') &&
+    !createMutation.isPending
+
+  return (
+    <ModalOverlay onClose={onClose} wide>
+      {/* Header */}
+      <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-orange-900/15">
+        <div>
+          <h2 className="font-black text-stone-100 text-lg uppercase tracking-tight">Cargar pedido manual</h2>
+          <p className="text-stone-500 text-xs mt-0.5">El pedido quedará Pendiente; confirmalo para descontar stock.</p>
+        </div>
+        <button onClick={onClose} className="text-stone-600 hover:text-stone-400"><X size={18} /></button>
+      </div>
+
+      <div className="px-6 pb-6 pt-5 space-y-6">
+
+        {/* ── Datos del cliente ── */}
+        <section className="space-y-3">
+          <p className="text-[11px] font-black text-stone-500 uppercase tracking-widest">Datos del cliente</p>
+
+          <div>
+            <label className="block text-[10px] font-black text-stone-600 uppercase tracking-wider mb-1">Nombre y Apellido *</label>
+            <input value={nombre} onChange={e => setNombre(e.target.value)} className={inp} placeholder="Juan Pérez" />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-stone-600 uppercase tracking-wider mb-2">Tipo de entrega *</label>
+            <div className="flex gap-3">
+              {([['delivery', 'Delivery'], ['pickup', 'Retiro en local']] as const).map(([v, label]) => (
+                <label key={v} className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer
+                  transition-all text-sm font-bold select-none ${
+                  envio === v
+                    ? 'bg-orange-500/10 border-orange-500 text-orange-400'
+                    : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                }`}>
+                  <input type="radio" className="sr-only" checked={envio === v} onChange={() => setEnvio(v)} />
+                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${envio === v ? 'border-orange-500 bg-orange-500/60' : 'border-stone-700'}`} />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {envio === 'delivery' && (
+            <div>
+              <label className="block text-[10px] font-black text-stone-600 uppercase tracking-wider mb-1">Dirección *</label>
+              <input value={direccion} onChange={e => setDireccion(e.target.value)} className={inp} placeholder="Calle 123, Barrio" />
+            </div>
+          )}
+
+          <div>
+            <label className="block text-[10px] font-black text-stone-600 uppercase tracking-wider mb-1">Comentario</label>
+            <textarea value={comentario} onChange={e => setComentario(e.target.value)}
+              rows={2} className={`${inp} resize-none`} placeholder="Sin comentarios" />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-black text-stone-600 uppercase tracking-wider mb-2">Método de pago</label>
+            <div className="flex gap-3">
+              {(['efectivo', 'transferencia'] as const).map(v => (
+                <label key={v} className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer
+                  transition-all text-sm font-bold select-none ${
+                  pago === v
+                    ? 'bg-orange-500/10 border-orange-500 text-orange-400'
+                    : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                }`}>
+                  <input type="radio" className="sr-only" checked={pago === v} onChange={() => setPago(v)} />
+                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${pago === v ? 'border-orange-500 bg-orange-500/60' : 'border-stone-700'}`} />
+                  {v === 'efectivo' ? 'Efectivo' : 'Transferencia'}
+                </label>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Ítems ── */}
+        <section className="space-y-3">
+          <p className="text-[11px] font-black text-stone-500 uppercase tracking-widest">Ítems del pedido</p>
+
+          {items.length === 0 ? (
+            <p className="text-stone-600 text-sm text-center py-5 italic">
+              Sin ítems. Usá el buscador para agregar productos o combos.
+            </p>
+          ) : (
+            <div className="bg-[#120c06] border border-orange-900/15 rounded-xl overflow-hidden">
+              {items.map(item => (
+                <div key={item.key}
+                  className="flex items-center gap-2 px-4 py-3 border-b border-orange-900/10 last:border-0">
+                  <span className="flex-1 text-sm font-bold text-stone-200 truncate min-w-0">{item.item_name}</span>
+                  <span className="text-xs text-stone-600 shrink-0">${fmt(item.unit_price)}</span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button onClick={() => setQty(item.key, item.quantity - 1)}
+                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
+                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      <Minus size={11} />
+                    </button>
+                    <span className="w-7 text-center font-black text-stone-100 text-sm">{item.quantity}</span>
+                    <button onClick={() => setQty(item.key, item.quantity + 1)}
+                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
+                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      <Plus size={11} />
+                    </button>
+                  </div>
+                  <span className="text-sm font-bold text-orange-400 shrink-0 w-20 text-right">
+                    ${fmt(item.unit_price * item.quantity)}
+                  </span>
+                  <button onClick={() => removeItem(item.key)}
+                    className="text-stone-600 hover:text-red-400 transition-colors shrink-0">
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Totales en vivo */}
+          <div className="space-y-1 px-1">
+            <div className="flex justify-between text-sm text-stone-500">
+              <span>Subtotal</span>
+              <span className="font-bold">${fmt(subtotal)}</span>
+            </div>
+            <div className="flex justify-between text-sm text-stone-500">
+              <span>Envío</span>
+              <span className="font-bold">
+                {envio === 'pickup' ? 'Gratis'
+                  : deliveryCost > 0 ? `$${fmt(deliveryCost)}`
+                  : 'A confirmar'}
+              </span>
+            </div>
+            <div className="flex justify-between font-black text-orange-400 text-lg
+              border-t border-orange-900/20 pt-2 mt-1">
+              <span>Total</span>
+              <span>${fmt(total)}</span>
+            </div>
+          </div>
+
+          {/* Aviso monto mínimo */}
+          {belowMin && items.length > 0 && (
+            <div className="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3">
+              <AlertTriangle size={14} className="text-yellow-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-yellow-300">
+                El monto mínimo es{' '}
+                <span className="font-black">${fmt(minOrder)}</span>.
+                Podés cargarlo igual si es una excepción.
+              </p>
+            </div>
+          )}
+
+          {/* Buscador de catálogo */}
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-600 pointer-events-none" />
+            <input
+              value={catalogSearch}
+              onChange={e => setCatalogSearch(e.target.value)}
+              placeholder="Buscar producto o combo para agregar... (min. 2 caracteres)"
+              className={`${inp} pl-8`}
+            />
+            {catalogSearch && (
+              <button onClick={() => setCatalogSearch('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-600 hover:text-stone-400">
+                <X size={13} />
+              </button>
+            )}
+          </div>
+
+          {catalogResults.length > 0 && (
+            <div className="bg-[#0f0904] border border-orange-900/25 rounded-xl overflow-hidden">
+              {catalogResults.map(item => (
+                <button key={item.id} type="button" onClick={() => addCatalogItem(item)}
+                  className="w-full flex items-center justify-between px-4 py-3 text-sm
+                    hover:bg-orange-500/10 transition-colors border-b border-orange-900/10 last:border-0 text-left">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-[9px] font-black text-stone-700 uppercase shrink-0">
+                      {item.type === 'product' ? 'Prod' : 'Combo'}
+                    </span>
+                    <span className="font-bold text-stone-200 truncate">{item.name}</span>
+                    {item.stock !== undefined && (
+                      <span className={`text-xs font-black shrink-0 ${
+                        item.stock <= 0 ? 'text-red-400' : item.stock <= 5 ? 'text-yellow-400' : 'text-stone-600'
+                      }`}>
+                        stock: {item.stock}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 ml-3">
+                    <span className="text-orange-400 font-bold">${fmt(item.price)}</span>
+                    <Plus size={14} className="text-orange-500" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* ── Acciones ── */}
+        <div className="flex gap-3 pt-1">
+          <button onClick={onClose} disabled={createMutation.isPending}
+            className="flex-1 py-3 rounded-xl border border-orange-900/30 text-stone-400 font-black
+              text-sm uppercase tracking-widest hover:border-orange-700/50 hover:text-stone-200
+              transition-all disabled:opacity-50">
+            Cancelar
+          </button>
+          <button
+            onClick={() => createMutation.mutate()}
+            disabled={!canSave}
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
+              bg-orange-600 hover:bg-orange-500 text-white font-black text-sm uppercase
+              tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {createMutation.isPending
+              ? <Loader2 size={15} className="animate-spin" />
+              : <ClipboardList size={15} />}
+            {createMutation.isPending ? 'Guardando...' : 'Crear pedido'}
+          </button>
+        </div>
+      </div>
+    </ModalOverlay>
+  )
+}
+
+// ── EditOrderModal ─────────────────────────────────────────────────────────────
 
 function buildConsumptionMap(
   items: { product_id: string | null; combo_id: string | null; quantity: number }[],
@@ -813,6 +1136,12 @@ function OrderCard({
             </span>
             <span className="text-stone-600 text-xs">{fmtDate(order.created_at)}</span>
             <StatusBadge status={order.status} />
+            {order.source === 'manual' && (
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full border uppercase tracking-widest
+                bg-blue-500/15 text-blue-400 border-blue-500/25">
+                Manual
+              </span>
+            )}
           </div>
           <p className="font-bold text-stone-200 truncate">{order.customer_name}</p>
           <div className="flex items-center gap-4 mt-1.5 text-xs text-stone-600 flex-wrap">
@@ -960,12 +1289,13 @@ export default function AdminOrders() {
     return 'pending' as OrderStatus
   })()
 
-  const [activeTab,  setActiveTab]  = useState<OrderStatus>(initialTab)
-  const [search,     setSearch]     = useState('')
-  const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [confirmId,  setConfirmId]  = useState<string | null>(null)
-  const [cancelId,   setCancelId]   = useState<string | null>(null)
-  const [editId,     setEditId]     = useState<string | null>(null)
+  const [activeTab,       setActiveTab]       = useState<OrderStatus>(initialTab)
+  const [search,          setSearch]          = useState('')
+  const [expandedId,      setExpandedId]      = useState<string | null>(null)
+  const [confirmId,       setConfirmId]       = useState<string | null>(null)
+  const [cancelId,        setCancelId]        = useState<string | null>(null)
+  const [editId,          setEditId]          = useState<string | null>(null)
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   // ── Counts (shared cache with sidebar) ──────────────────────
 
@@ -1078,9 +1408,19 @@ export default function AdminOrders() {
 
   return (
     <div className="p-6 md:p-8 max-w-4xl">
-      <div className="mb-7">
-        <h1 className="text-3xl font-black text-stone-100 uppercase tracking-tight">Pedidos</h1>
-        <p className="text-stone-600 text-sm mt-1">Pedidos recibidos por WhatsApp.</p>
+      <div className="mb-7 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl font-black text-stone-100 uppercase tracking-tight">Pedidos</h1>
+          <p className="text-stone-600 text-sm mt-1">Pedidos recibidos por WhatsApp o cargados manualmente.</p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white
+            font-black px-4 py-2.5 rounded-xl text-sm uppercase tracking-widest transition-colors shrink-0"
+        >
+          <ClipboardList size={15} />
+          Cargar pedido manual
+        </button>
       </div>
 
       {/* Status tabs */}
@@ -1180,6 +1520,17 @@ export default function AdminOrders() {
       )}
 
       {/* Modals */}
+      {showCreateModal && (
+        <CreateManualOrderModal
+          onClose={() => setShowCreateModal(false)}
+          onCreated={(ref) => {
+            setShowCreateModal(false)
+            setActiveTab('pending')
+            toast.success(`Pedido manual creado — Ref #${ref}`)
+            invalidateOrders()
+          }}
+        />
+      )}
       {confirmId && confirmOrder && (
         <ConfirmModal
           order={confirmOrder}

@@ -88,6 +88,7 @@ export interface Order {
   delivery_cost: number
   total: number
   status: 'pending' | 'confirmed' | 'cancelled'
+  source: string
   created_at: string
   confirmed_at: string | null
 }

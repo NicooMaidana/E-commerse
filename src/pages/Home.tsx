@@ -335,7 +335,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
 
   const shippingCost = envio === 'delivery' ? deliveryCost : 0
   const total        = totalPrice + shippingCost
-  const belowMin     = minOrder > 0 && totalPrice < minOrder
+  const belowMin     = envio === 'delivery' && minOrder > 0 && totalPrice < minOrder
 
   const canSubmit =
     items.length > 0 &&

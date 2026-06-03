@@ -28,7 +28,7 @@ export default function Checkout() {
 
   const shippingCost = envio === 'delivery' ? deliveryCost : 0
   const total        = totalPrice + shippingCost
-  const belowMin     = minOrder > 0 && totalPrice < minOrder
+  const belowMin     = envio === 'delivery' && minOrder > 0 && totalPrice < minOrder
 
   const canSubmit =
     nombre.trim() !== '' &&
