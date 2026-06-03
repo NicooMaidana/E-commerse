@@ -74,3 +74,30 @@ export interface CatalogItem {
   inStock: boolean
   components?: string
 }
+
+export interface Order {
+  id: string
+  reference: string
+  customer_name: string
+  delivery_type: 'delivery' | 'pickup'
+  address: string | null
+  comment: string | null
+  payment_method: 'efectivo' | 'transferencia'
+  subtotal: number
+  delivery_cost: number
+  total: number
+  status: 'pending' | 'confirmed' | 'cancelled'
+  created_at: string
+  confirmed_at: string | null
+}
+
+export interface OrderItem {
+  id: string
+  order_id: string
+  product_id: string | null
+  combo_id: string | null
+  item_name: string
+  unit_price: number
+  quantity: number
+  line_total: number
+}

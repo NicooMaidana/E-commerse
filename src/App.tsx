@@ -13,7 +13,8 @@ import AdminProducts from './pages/admin/Products'
 import AdminCombos from './pages/admin/Combos'
 import AdminBanners from './pages/admin/Banners'
 import AdminSettings from './pages/admin/Settings'
-import AdminOrders from './pages/admin/Orders'
+import AdminOrders  from './pages/admin/Orders'
+import AdminReports from './pages/admin/Reports'
 
 function AdminIndex() {
   const { session, loading } = useAuth()
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/admin/banners"       element={<AdminBanners />} />
             <Route path="/admin/configuracion" element={<AdminSettings />} />
             <Route path="/admin/pedidos"       element={<AdminOrders />} />
+            <Route path="/admin/informes"      element={<AdminReports />} />
           </Route>
         </Route>
       </Routes>

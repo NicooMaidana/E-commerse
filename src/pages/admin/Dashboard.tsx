@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { Package, AlertTriangle, Gift, TrendingDown } from 'lucide-react'
+import { Package, AlertTriangle, Gift, TrendingDown, ClipboardList } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { PENDING_COUNT_KEY } from './Orders'
 
 type CriticalProduct = {
   id: string
@@ -56,11 +57,22 @@ function useStats() {
     },
   })
 
-  return { total, outOfStock, combos, critical }
+  const pendingOrders = useQuery({
+    queryKey: PENDING_COUNT_KEY,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending')
+      return count ?? 0
+    },
+  })
+
+  return { total, outOfStock, combos, critical, pendingOrders }
 }
 
 export default function Dashboard() {
-  const { total, outOfStock, combos, critical } = useStats()
+  const { total, outOfStock, combos, critical, pendingOrders } = useStats()
 
   return (
     <div className="p-8">
@@ -72,7 +84,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-10">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <StatCard
           label="Total productos"
           value={total.data}
@@ -93,6 +105,14 @@ export default function Dashboard() {
           loading={combos.isLoading}
           icon={<Gift size={20} className="text-yellow-400" />}
           color="text-yellow-400"
+        />
+        <StatCard
+          label="Pedidos pendientes"
+          value={pendingOrders.data}
+          loading={pendingOrders.isLoading}
+          icon={<ClipboardList size={20} className="text-blue-400" />}
+          color="text-blue-400"
+          linkTo="/admin/pedidos?status=pending"
         />
       </div>
 
@@ -171,15 +191,18 @@ function StatCard({
   loading,
   icon,
   color,
+  linkTo,
 }: {
   label: string
   value: number | undefined
   loading: boolean
   icon: React.ReactNode
   color: string
+  linkTo?: string
 }) {
-  return (
-    <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5">
+  const inner = (
+    <div className={`bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5 h-full
+      ${linkTo ? 'hover:border-orange-500/40 hover:bg-[#221508] transition-colors cursor-pointer' : ''}`}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-[11px] font-black text-stone-600 uppercase tracking-widest">
           {label}
@@ -193,4 +216,5 @@ function StatCard({
       )}
     </div>
   )
+  return linkTo ? <Link to={linkTo}>{inner}</Link> : inner
 }

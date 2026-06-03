@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import {
   ArrowRight, MessageCircle, Search, X,
-  Minus, Plus, Trash2, ShoppingBag, AlertTriangle,
+  Minus, Plus, Trash2, ShoppingBag, AlertTriangle, Loader2,
 } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 import Ticker from '../components/Ticker'
 import CategoryFilter from '../components/catalog/CategoryFilter'
@@ -14,6 +16,7 @@ import { useCategories, useCatalogItems } from '../hooks/useCatalog'
 import { useSettings } from '../hooks/useSettings'
 import { useCart } from '../context/CartContext'
 import type { CartItem } from '../types'
+import { supabase } from '../lib/supabase'
 
 /* ── smooth-scroll helper (also used by Navbar) ── */
 const scrollTo = (id: string) => (e: React.MouseEvent) => {
@@ -311,6 +314,11 @@ function CatalogSection() {
 type EnvioType = 'delivery' | 'retiro'
 type PagoType  = 'efectivo' | 'transferencia'
 
+const REF_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+const generateRef = () =>
+  Array.from({ length: 4 }, () => REF_CHARS[Math.floor(Math.random() * REF_CHARS.length)]).join('')
+
+
 function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>['data'] }) {
   const { items, updateQuantity, removeItem, clearCart, totalPrice } = useCart()
 
@@ -337,27 +345,30 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
     !belowMin &&
     waNumber !== ''
 
-  const waMessage = useMemo(() => {
+  const buildWaMessage = (reference: string | null): string => {
     if (!items.length) return ''
-
-    // Generados en runtime: evita que la codificación del archivo corrompa los emoji
+    // Generated inside the function: prevents bundler constant-folding from
+    // inlining emoji/special-char literals that can be corrupted by file encoding.
     const ic = String.fromCodePoint
     const EM = {
-      bag:    ic(0x1F6CD),        // 🛍
-      person: ic(0x1F464),        // 👤
-      truck:  ic(0x1F69A),        // 🚚
-      card:   ic(0x1F4B3),        // 💳
-      pkg:    ic(0x1F4E6),        // 📦
-      money:  ic(0x1F4B0),        // 💰
-      bubble: ic(0x1F4AC),        // 💬
+      bag:    ic(0x1F6CD),
+      person: ic(0x1F464),
+      truck:  ic(0x1F69A),
+      card:   ic(0x1F4B3),
+      pkg:    ic(0x1F4E6),
+      money:  ic(0x1F4B0),
+      bubble: ic(0x1F4AC),
+      dot:    ic(0x00B7),   // middle dot  ·
+      bullet: ic(0x2022),   // bullet      •
+      dash:   ic(0x2500),   // box dash    ─
     }
-
     const lines = items.map((item) => {
       const sub = fmt(item.price * item.quantity)
       return item.type === 'combo' && item.components
-        ? `• ${item.quantity}x ${item.name.toUpperCase()} [contiene: ${item.components}] -> $${sub}`
-        : `• ${item.quantity}x ${item.name.toUpperCase()} -> $${sub}`
+        ? `${EM.bullet} ${item.quantity}x ${item.name.toUpperCase()} [contiene: ${item.components}] -> $${sub}`
+        : `${EM.bullet} ${item.quantity}x ${item.name.toUpperCase()} -> $${sub}`
     })
+    const sep = EM.dash.repeat(17)
     const envioLine    = envio === 'delivery'
       ? `${EM.truck} Delivery - ${direccion}`
       : `${EM.truck} Retiro en local`
@@ -366,25 +377,65 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
       : deliveryCost > 0
         ? `${EM.pkg} Envio: $${fmt(deliveryCost)}`
         : `${EM.pkg} Envio: a confirmar`
+    const header = reference
+      ? `${EM.bag} *Pedido ${storeName}*  ${EM.dot}  Ref #${reference}`
+      : `${EM.bag} *Pedido ${storeName}*`
     return [
-      `${EM.bag} *Pedido ${storeName}*`, '',
+      header, '',
       `${EM.person} ${nombre}`, envioLine,
       `${EM.card} ${pago === 'efectivo' ? 'Efectivo' : 'Transferencia'}`, '',
-      '─────────────────', ...lines, '─────────────────',
+      sep, ...lines, sep,
       envioSummary, `${EM.money} TOTAL: $${fmt(total)}`, '',
       `${EM.bubble} ${comentario.trim() || 'Sin comentarios'}`,
     ].join('\n')
-  }, [items, nombre, envio, direccion, pago, comentario, deliveryCost, total, storeName])
+  }
+
+  const createOrder = useMutation({
+    mutationFn: async () => {
+      const reference     = generateRef()
+      // Capture URLs immediately (correct closure over current form state)
+      const waUrl         = `https://wa.me/${waNumber}?text=${encodeURIComponent(buildWaMessage(reference))}`
+      const waFallbackUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(buildWaMessage(null))}`
+      try {
+        const { error } = await supabase.rpc('create_order_with_items', {
+          p_reference:      reference,
+          p_customer_name:  nombre.trim(),
+          p_delivery_type:  envio === 'delivery' ? 'delivery' : 'pickup',
+          p_address:        envio === 'delivery' ? direccion.trim() : null,
+          p_comment:        comentario.trim() || null,
+          p_payment_method: pago,
+          p_subtotal:       totalPrice,
+          p_delivery_cost:  shippingCost,
+          p_total:          total,
+          p_items:          items.map((item) => ({
+            product_id: item.type === 'product' ? item.id : null,
+            combo_id:   item.type === 'combo'   ? item.id : null,
+            item_name:  item.name,
+            unit_price: item.price,
+            quantity:   item.quantity,
+            line_total: item.price * item.quantity,
+          })),
+        })
+        if (error) throw error
+        return { url: waUrl, saved: true }
+      } catch {
+        return { url: waFallbackUrl, saved: false }
+      }
+    },
+    onSuccess: ({ url, saved }) => {
+      if (!saved) toast.error('No se pudo registrar el pedido, pero podés enviarlo igual.')
+      window.open(url, '_blank', 'noopener,noreferrer')
+      clearCart()
+      setNombre('')
+      setDireccion('')
+      setComentario('')
+      setSent(true)
+    },
+  })
 
   const handleSubmit = () => {
-    if (!canSubmit) return
-    const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`
-    window.open(url, '_blank', 'noopener,noreferrer')
-    clearCart()
-    setNombre('')
-    setDireccion('')
-    setComentario('')
-    setSent(true)
+    if (!canSubmit || createOrder.isPending) return
+    createOrder.mutate()
   }
 
   return (
@@ -614,16 +665,18 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
 
               <button
                 onClick={handleSubmit}
-                disabled={!canSubmit}
+                disabled={!canSubmit || createOrder.isPending}
                 className={`w-full flex items-center justify-center gap-2 font-black py-4
                   rounded-xl text-sm uppercase tracking-widest transition-all ${
-                  canSubmit
+                  canSubmit && !createOrder.isPending
                     ? 'bg-green-700 hover:bg-green-600 text-white hover:shadow-lg hover:shadow-green-900/40 active:scale-[0.98]'
                     : 'bg-stone-800 text-stone-600 cursor-not-allowed'
                 }`}
               >
-                <MessageCircle size={18} />
-                Enviar pedido por WhatsApp
+                {createOrder.isPending
+                  ? <Loader2 size={18} className="animate-spin" />
+                  : <MessageCircle size={18} />}
+                {createOrder.isPending ? 'Guardando pedido...' : 'Enviar pedido por WhatsApp'}
               </button>
             </div>
           </div>

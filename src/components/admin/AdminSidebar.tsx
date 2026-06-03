@@ -1,18 +1,22 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Tag, Package, Gift,
-  Megaphone, Settings, ClipboardList, LogOut, ChevronRight,
+  Megaphone, Settings, ClipboardList, BarChart2, LogOut, ChevronRight,
 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../hooks/useAuth'
+import { supabase } from '../../lib/supabase'
+import { PENDING_COUNT_KEY } from '../../pages/admin/Orders'
 
-const NAV = [
+const NAV: { to: string; icon: React.ElementType; label: string; pendingBadge?: true }[] = [
   { to: '/admin/dashboard',     icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/admin/categorias',    icon: Tag,             label: 'Categorías' },
   { to: '/admin/productos',     icon: Package,         label: 'Productos' },
   { to: '/admin/combos',        icon: Gift,            label: 'Combos' },
   { to: '/admin/banners',       icon: Megaphone,       label: 'Banners' },
   { to: '/admin/configuracion', icon: Settings,        label: 'Configuración' },
-  { to: '/admin/pedidos',       icon: ClipboardList,   label: 'Pedidos' },
+  { to: '/admin/pedidos',       icon: ClipboardList,   label: 'Pedidos', pendingBadge: true },
+  { to: '/admin/informes',      icon: BarChart2,        label: 'Informes'  },
 ]
 
 interface Props {
@@ -23,6 +27,18 @@ interface Props {
 export default function AdminSidebar({ open, onClose }: Props) {
   const { session, signOut } = useAuth()
   const navigate = useNavigate()
+
+  const { data: pendingCount = 0 } = useQuery({
+    queryKey: PENDING_COUNT_KEY,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending')
+      return count ?? 0
+    },
+    refetchInterval: 30_000,
+  })
 
   const handleSignOut = async () => {
     await signOut()
@@ -57,7 +73,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {NAV.map(({ to, icon: Icon, label }) => (
+        {NAV.map(({ to, icon: Icon, label, pendingBadge }) => (
           <NavLink
             key={to}
             to={to}
@@ -78,6 +94,12 @@ export default function AdminSidebar({ open, onClose }: Props) {
                   className={isActive ? 'text-orange-400' : 'text-stone-600'}
                 />
                 <span className="flex-1">{label}</span>
+                {pendingBadge && pendingCount > 0 && (
+                  <span className="text-[10px] font-black bg-yellow-500/20 text-yellow-400
+                    px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                    {pendingCount}
+                  </span>
+                )}
                 {isActive && (
                   <ChevronRight size={13} className="text-orange-700" />
                 )}
