@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import {
   ArrowRight, MessageCircle, Search, X,
-  Minus, Plus, Trash2, ShoppingBag, AlertTriangle, Loader2,
+  Minus, Plus, Trash2, ShoppingBag, AlertTriangle,
 } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
-import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 import Ticker from '../components/Ticker'
@@ -350,17 +349,18 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
     // Generated inside the function: prevents bundler constant-folding from
     // inlining emoji/special-char literals that can be corrupted by file encoding.
     const ic = String.fromCodePoint
+    const vs = ic(0xFE0F) // variation selector-16: forces emoji presentation
     const EM = {
-      bag:    ic(0x1F6CD),
-      person: ic(0x1F464),
-      truck:  ic(0x1F69A),
-      card:   ic(0x1F4B3),
-      pkg:    ic(0x1F4E6),
-      money:  ic(0x1F4B0),
-      bubble: ic(0x1F4AC),
-      dot:    ic(0x00B7),   // middle dot  ·
-      bullet: ic(0x2022),   // bullet      •
-      dash:   ic(0x2500),   // box dash    ─
+      bag:    ic(0x1F6CD) + vs,
+      person: ic(0x1F464) + vs,
+      truck:  ic(0x1F69A) + vs,
+      card:   ic(0x1F4B3) + vs,
+      pkg:    ic(0x1F4E6) + vs,
+      money:  ic(0x1F4B0) + vs,
+      bubble: ic(0x1F4AC) + vs,
+      dot:    ic(0x00B7),        // middle dot  ·
+      bullet: ic(0x2022),        // bullet      •
+      dash:   ic(0x2500),        // box dash    ─
     }
     const lines = items.map((item) => {
       const sub = fmt(item.price * item.quantity)
@@ -390,24 +390,46 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
     ].join('\n')
   }
 
-  const createOrder = useMutation({
-    mutationFn: async () => {
-      const reference     = generateRef()
-      // Capture URLs immediately (correct closure over current form state)
-      const waUrl         = `https://wa.me/${waNumber}?text=${encodeURIComponent(buildWaMessage(reference))}`
-      const waFallbackUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(buildWaMessage(null))}`
+  const handleSubmit = () => {
+    if (!canSubmit) return
+
+    // Snapshot values NOW, before state resets
+    const reference    = generateRef()
+    const snapNombre   = nombre.trim()
+    const snapEnvio    = envio
+    const snapDireccion= direccion.trim()
+    const snapComentario = comentario.trim()
+    const snapPago     = pago
+    const snapItems    = [...items]
+    const snapSubtotal = totalPrice
+    const snapShipping = shippingCost
+    const snapTotal    = total
+
+    // 1. Open WhatsApp SYNCHRONOUSLY from the user gesture (prevents popup blocker)
+    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(buildWaMessage(reference))}`
+    window.open(waUrl, '_blank', 'noopener,noreferrer')
+
+    // 2. Reset UI immediately
+    clearCart()
+    setNombre('')
+    setDireccion('')
+    setComentario('')
+    setSent(true)
+
+    // 3. Save to DB asynchronously — fire and forget, never blocks the sale
+    void (async () => {
       try {
         const { error } = await supabase.rpc('create_order_with_items', {
           p_reference:      reference,
-          p_customer_name:  nombre.trim(),
-          p_delivery_type:  envio === 'delivery' ? 'delivery' : 'pickup',
-          p_address:        envio === 'delivery' ? direccion.trim() : null,
-          p_comment:        comentario.trim() || null,
-          p_payment_method: pago,
-          p_subtotal:       totalPrice,
-          p_delivery_cost:  shippingCost,
-          p_total:          total,
-          p_items:          items.map((item) => ({
+          p_customer_name:  snapNombre,
+          p_delivery_type:  snapEnvio === 'delivery' ? 'delivery' : 'pickup',
+          p_address:        snapEnvio === 'delivery' ? snapDireccion : null,
+          p_comment:        snapComentario || null,
+          p_payment_method: snapPago,
+          p_subtotal:       snapSubtotal,
+          p_delivery_cost:  snapShipping,
+          p_total:          snapTotal,
+          p_items:          snapItems.map((item) => ({
             product_id: item.type === 'product' ? item.id : null,
             combo_id:   item.type === 'combo'   ? item.id : null,
             item_name:  item.name,
@@ -416,26 +438,11 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
             line_total: item.price * item.quantity,
           })),
         })
-        if (error) throw error
-        return { url: waUrl, saved: true }
+        if (error) toast.error('No se pudo registrar el pedido en el sistema.')
       } catch {
-        return { url: waFallbackUrl, saved: false }
+        toast.error('No se pudo registrar el pedido en el sistema.')
       }
-    },
-    onSuccess: ({ url, saved }) => {
-      if (!saved) toast.error('No se pudo registrar el pedido, pero podés enviarlo igual.')
-      window.open(url, '_blank', 'noopener,noreferrer')
-      clearCart()
-      setNombre('')
-      setDireccion('')
-      setComentario('')
-      setSent(true)
-    },
-  })
-
-  const handleSubmit = () => {
-    if (!canSubmit || createOrder.isPending) return
-    createOrder.mutate()
+    })()
   }
 
   return (
@@ -665,18 +672,16 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
 
               <button
                 onClick={handleSubmit}
-                disabled={!canSubmit || createOrder.isPending}
+                disabled={!canSubmit}
                 className={`w-full flex items-center justify-center gap-2 font-black py-4
                   rounded-xl text-sm uppercase tracking-widest transition-all ${
-                  canSubmit && !createOrder.isPending
+                  canSubmit
                     ? 'bg-green-700 hover:bg-green-600 text-white hover:shadow-lg hover:shadow-green-900/40 active:scale-[0.98]'
                     : 'bg-stone-800 text-stone-600 cursor-not-allowed'
                 }`}
               >
-                {createOrder.isPending
-                  ? <Loader2 size={18} className="animate-spin" />
-                  : <MessageCircle size={18} />}
-                {createOrder.isPending ? 'Guardando pedido...' : 'Enviar pedido por WhatsApp'}
+                <MessageCircle size={18} />
+                Enviar pedido por WhatsApp
               </button>
             </div>
           </div>

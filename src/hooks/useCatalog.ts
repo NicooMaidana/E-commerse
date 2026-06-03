@@ -62,6 +62,7 @@ export function useCatalogItems() {
             description: c.description,
             category_id: c.category_id,
             price: c.price,
+            image: c.images?.[0],
             inStock: true,
             components: components || undefined,
           }

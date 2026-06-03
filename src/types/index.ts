@@ -34,6 +34,7 @@ export interface Combo {
   description: string | null
   category_id: string | null
   price: number
+  images: string[]
   visible: boolean
   created_at: string
   combo_items: ComboItem[]

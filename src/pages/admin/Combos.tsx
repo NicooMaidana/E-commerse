@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Pencil, Trash2, Search, X } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search, X, ImageOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { supabase } from '../../lib/supabase'
 import Modal from '../../components/ui/Modal'
@@ -40,6 +40,9 @@ export default function AdminCombos() {
   const [comboItems, setComboItems] = useState<ComboItemForm[]>([])
   const [productSearch, setProductSearch] = useState('')
   const [deleting, setDeleting] = useState<ComboRow | null>(null)
+  const [imageFile, setImageFile]   = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   /* queries */
   const { data: combos = [], isLoading } = useQuery<ComboRow[]>({
@@ -81,6 +84,8 @@ export default function AdminCombos() {
     setForm(EMPTY)
     setComboItems([])
     setProductSearch('')
+    setImageFile(null)
+    setPreviewUrl(null)
     setModal(true)
   }
 
@@ -102,7 +107,15 @@ export default function AdminCombos() {
       }))
     )
     setProductSearch('')
+    setImageFile(null)
+    setPreviewUrl(c.images?.[0] ?? null)
     setModal(true)
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null
+    setImageFile(file)
+    setPreviewUrl(file ? URL.createObjectURL(file) : (editing?.images?.[0] ?? null))
   }
 
   /* combo item helpers */
@@ -138,30 +151,42 @@ export default function AdminCombos() {
     mutationFn: async () => {
       if (comboItems.length === 0) throw new Error('Agregá al menos un producto al combo')
 
+      // Use a stable ID so we can reference it for image path and insert
+      const comboId = editing?.id ?? crypto.randomUUID()
+      let images: string[] = editing?.images ?? []
+
+      if (imageFile) {
+        const ext  = imageFile.name.split('.').pop() ?? 'jpg'
+        const path = `combos/${comboId}/${Date.now()}.${ext}`
+        const { error: upErr } = await supabase.storage
+          .from('product-images')
+          .upload(path, imageFile, { upsert: true })
+        if (upErr) throw upErr
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(path)
+        images = [publicUrl]
+      }
+
       const payload = {
         name:        form.name.trim(),
         description: form.description.trim() || null,
         category_id: form.category_id || null,
         price:       parseFloat(form.price) || 0,
         visible:     form.visible,
+        images,
       }
 
-      let comboId = editing?.id
-
       if (editing) {
-        const { error } = await supabase.from('combos').update(payload).eq('id', editing.id)
+        const { error } = await supabase.from('combos').update(payload).eq('id', comboId)
         if (error) throw error
       } else {
-        const { data, error } = await supabase.from('combos').insert(payload).select('id').single()
+        const { error } = await supabase.from('combos').insert({ id: comboId, ...payload })
         if (error) throw error
-        comboId = data.id
       }
 
       // Sync combo_items: delete all, re-insert
-      const { error: delErr } = await supabase
-        .from('combo_items')
-        .delete()
-        .eq('combo_id', comboId!)
+      const { error: delErr } = await supabase.from('combo_items').delete().eq('combo_id', comboId)
       if (delErr) throw delErr
 
       const { error: insErr } = await supabase.from('combo_items').insert(
@@ -232,7 +257,7 @@ export default function AdminCombos() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-orange-900/15">
-                {['Nombre', 'Categoría', 'Precio', 'Productos', 'Visible', ''].map((h) => (
+                {['', 'Nombre', 'Categoría', 'Precio', 'Productos', 'Visible', ''].map((h) => (
                   <th key={h} className={thClass}>{h}</th>
                 ))}
               </tr>
@@ -240,6 +265,17 @@ export default function AdminCombos() {
             <tbody>
               {combos.map((c) => (
                 <tr key={c.id} className={trClass}>
+                  <td className="px-4 py-3">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#2d1a09] shrink-0">
+                      {c.images?.[0] ? (
+                        <img src={c.images[0]} alt={c.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <ImageOff size={14} className="text-stone-700" />
+                        </div>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-5 py-3.5 font-bold text-stone-200">{c.name}</td>
                   <td className="px-5 py-3.5 text-stone-500 text-xs">
                     {c.categories?.name ?? '—'}
@@ -316,6 +352,39 @@ export default function AdminCombos() {
               placeholder="Descripción del combo..."
               className={`${inputClass} resize-none`}
             />
+          </Field>
+
+          <Field label="Foto">
+            <div
+              className="border-2 border-dashed border-orange-900/30 rounded-xl overflow-hidden
+                cursor-pointer hover:border-orange-500/50 transition-colors"
+              onClick={() => fileRef.current?.click()}
+            >
+              {previewUrl ? (
+                <img src={previewUrl} alt="preview" className="w-full h-40 object-cover" />
+              ) : (
+                <div className="h-40 flex flex-col items-center justify-center gap-2 text-stone-600">
+                  <ImageOff size={28} strokeWidth={1.5} />
+                  <p className="text-xs font-bold">Hacé click para subir una foto</p>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {previewUrl && (
+              <button
+                type="button"
+                onClick={() => { setImageFile(null); setPreviewUrl(null) }}
+                className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors mt-1"
+              >
+                Quitar foto
+              </button>
+            )}
           </Field>
 
           <div className="grid md:grid-cols-2 gap-4">
