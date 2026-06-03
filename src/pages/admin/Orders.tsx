@@ -1021,6 +1021,8 @@ export default function AdminOrders() {
   const invalidateOrders = () => {
     qc.invalidateQueries({ queryKey: ['admin', 'orders'] })
     qc.invalidateQueries({ queryKey: ['admin', 'products'] })
+    qc.invalidateQueries({ queryKey: ['admin', 'modal_stocks'] })
+    qc.invalidateQueries({ queryKey: ['admin', 'modal_combos'] })
     qc.invalidateQueries({ queryKey: ['catalog_items'] })
     qc.invalidateQueries({ queryKey: ['admin', 'stats'] })
   }

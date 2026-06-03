@@ -28,6 +28,7 @@ const fmt = (n: number) => n.toLocaleString('es-AR')
 function useAdminProducts() {
   return useQuery<ProductRow[]>({
     queryKey: ['admin', 'products'],
+    staleTime: 0,
     queryFn: async () => {
       const { data, error } = await supabase
         .from('products')
