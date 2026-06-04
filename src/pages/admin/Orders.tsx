@@ -419,7 +419,7 @@ function CreateManualOrderModal({
   const createMutation = useMutation({
     mutationFn: async () => {
       const ref = generateRef()
-      const { data: orderId, error } = await supabase.rpc('create_order_with_items', {
+      const { data: orderId, error: createErr } = await supabase.rpc('create_order_with_items', {
         p_reference:      ref,
         p_customer_name:  nombre.trim(),
         p_delivery_type:  envio,
@@ -439,10 +439,12 @@ function CreateManualOrderModal({
           line_total: i.unit_price * i.quantity,
         })),
       })
-      if (error) throw error
-      return { ref, orderId: orderId as string }
+      if (createErr) throw createErr
+      const { error: confirmErr } = await supabase.rpc('confirm_order', { p_order_id: orderId as string })
+      if (confirmErr) throw confirmErr
+      return ref
     },
-    onSuccess: ({ ref }) => onCreated(ref),
+    onSuccess: (ref) => onCreated(ref),
     onError: (e: Error) => toast.error(e.message || 'Error al crear el pedido'),
   })
 
@@ -457,7 +459,7 @@ function CreateManualOrderModal({
       <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-orange-900/15">
         <div>
           <h2 className="font-black text-stone-100 text-lg uppercase tracking-tight">Cargar pedido manual</h2>
-          <p className="text-stone-500 text-xs mt-0.5">El pedido quedará Pendiente; confirmalo para descontar stock.</p>
+          <p className="text-stone-500 text-xs mt-0.5">Se crea y confirma al instante — el stock se descuenta al guardar.</p>
         </div>
         <button onClick={onClose} className="text-stone-600 hover:text-stone-400"><X size={18} /></button>
       </div>
@@ -1525,8 +1527,8 @@ export default function AdminOrders() {
           onClose={() => setShowCreateModal(false)}
           onCreated={(ref) => {
             setShowCreateModal(false)
-            setActiveTab('pending')
-            toast.success(`Pedido manual creado — Ref #${ref}`)
+            setActiveTab('confirmed')
+            toast.success(`Pedido manual confirmado — Ref #${ref}`)
             invalidateOrders()
           }}
         />

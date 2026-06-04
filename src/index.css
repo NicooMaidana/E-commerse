@@ -50,6 +50,52 @@ html {
   will-change: transform;
 }
 
+/* ── Cart add animations ── */
+
+/* Pill that floats up from the + button and fades out */
+@keyframes cart-particle {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+  60%  { transform: translate(-50%, -64px) scale(1);  opacity: 1; }
+  100% { transform: translate(-50%, -90px) scale(0.8); opacity: 0; }
+}
+.cart-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  background: #f97316;   /* orange-500 */
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  animation: cart-particle 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Spring pop on the + icon when adding */
+@keyframes btn-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.5); }
+  65%  { transform: scale(0.85); }
+  85%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.btn-pop {
+  animation: btn-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Bounce on the cart badge when count increases */
+@keyframes badge-bounce {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.6); }
+  55%  { transform: scale(0.8); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.badge-bounce {
+  animation: badge-bounce 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;

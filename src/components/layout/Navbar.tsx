@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { ShoppingCart, MessageCircle } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useSettings } from '../../hooks/useSettings'
@@ -10,6 +11,16 @@ const scrollTo = (id: string) => (e: React.MouseEvent) => {
 export default function Navbar() {
   const { totalItems, setIsOpen } = useCart()
   const { data: settings } = useSettings()
+
+  // Bounce the cart badge whenever an item is added
+  const [badgeBounce, setBadgeBounce] = useState(false)
+  const prevTotal = useRef(totalItems)
+  useEffect(() => {
+    if (totalItems > prevTotal.current) {
+      setBadgeBounce(true)
+    }
+    prevTotal.current = totalItems
+  }, [totalItems])
 
   const whatsappUrl = settings?.whatsapp_number
     ? `https://wa.me/${settings.whatsapp_number}`
@@ -88,9 +99,12 @@ export default function Navbar() {
             <ShoppingCart size={22} />
             {totalItems > 0 && (
               <span
-                className="absolute -top-1 -right-1 bg-orange-500 text-white
+                key={totalItems}
+                className={`absolute -top-1 -right-1 bg-orange-500 text-white
                   text-[10px] font-black rounded-full w-[18px] h-[18px]
-                  flex items-center justify-center leading-none"
+                  flex items-center justify-center leading-none
+                  ${badgeBounce ? 'badge-bounce' : ''}`}
+                onAnimationEnd={() => setBadgeBounce(false)}
               >
                 {totalItems > 9 ? '9+' : totalItems}
               </span>
