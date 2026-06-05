@@ -56,7 +56,6 @@ export default function Home() {
         <HeroSection
           storeName={storeName}
           whatsappUrl={whatsappUrl}
-          description={description}
         />
       </section>
 
@@ -79,11 +78,9 @@ export default function Home() {
 function HeroSection({
   storeName,
   whatsappUrl,
-  description,
 }: {
   storeName: string
   whatsappUrl?: string
-  description: string
 }) {
   const [first, ...rest] = storeName.split(' ')
 
