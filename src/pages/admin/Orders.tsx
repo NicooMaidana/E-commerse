@@ -95,7 +95,7 @@ function ModalOverlay({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className={`bg-[#1a1008] border border-orange-900/25 rounded-2xl w-full
+      <div className={`bg-[#1d1729] border border-[#3a2e4f]/25 rounded-2xl w-full
         max-h-[90vh] overflow-y-auto shadow-2xl ${wide ? 'max-w-2xl' : 'max-w-lg'}`}>
         {children}
       </div>
@@ -211,17 +211,17 @@ function ConfirmModal({
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 size={24} className="animate-spin text-orange-500" />
+            <Loader2 size={24} className="animate-spin text-amber-400" />
           </div>
         ) : stockLines.length === 0 ? (
           <p className="text-stone-600 text-sm text-center py-4 italic">
             Sin productos con stock para descontar.
           </p>
         ) : (
-          <div className="bg-[#120c06] border border-orange-900/15 rounded-xl overflow-hidden">
+          <div className="bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-orange-900/10">
+                <tr className="border-b border-[#3a2e4f]/10">
                   {['Producto', 'Descuento', 'Stock actual', 'Resultante'].map(h => (
                     <th key={h} className={`py-2.5 px-4 text-[10px] font-black text-stone-600 uppercase tracking-wider
                       ${h === 'Producto' ? 'text-left' : 'text-right'}`}>
@@ -235,7 +235,7 @@ function ConfirmModal({
                   const result = line.currentStock - line.qty
                   const neg = result < 0
                   return (
-                    <tr key={i} className="border-b border-orange-900/10 last:border-0">
+                    <tr key={i} className="border-b border-[#3a2e4f]/10 last:border-0">
                       <td className="px-4 py-2.5 font-bold text-stone-200">{line.name}</td>
                       <td className="px-4 py-2.5 text-right text-red-400 font-bold">-{line.qty}</td>
                       <td className="px-4 py-2.5 text-right text-stone-500">{line.currentStock}</td>
@@ -264,8 +264,8 @@ function ConfirmModal({
           <button
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 py-3 rounded-xl border border-orange-900/30 text-stone-400 font-black
-              text-sm uppercase tracking-widest hover:border-orange-700/50 hover:text-stone-200
+            className="flex-1 py-3 rounded-xl border border-[#3a2e4f]/30 text-stone-400 font-black
+              text-sm uppercase tracking-widest hover:border-amber-600/50 hover:text-stone-200
               transition-all disabled:opacity-50"
           >
             Cancelar
@@ -322,8 +322,8 @@ function CancelModal({
           <button
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 py-3 rounded-xl border border-orange-900/30 text-stone-400 font-black
-              text-sm uppercase tracking-widest hover:border-orange-700/50 hover:text-stone-200
+            className="flex-1 py-3 rounded-xl border border-[#3a2e4f]/30 text-stone-400 font-black
+              text-sm uppercase tracking-widest hover:border-amber-600/50 hover:text-stone-200
               transition-all disabled:opacity-50"
           >
             No, volver
@@ -349,8 +349,8 @@ function CancelModal({
 
 // ── CreateManualOrderModal ─────────────────────────────────────────────────────
 
-const inp = 'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm font-medium'
+const inp = 'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm font-medium'
 
 function CreateManualOrderModal({
   onClose, onCreated,
@@ -456,7 +456,7 @@ function CreateManualOrderModal({
   return (
     <ModalOverlay onClose={onClose} wide>
       {/* Header */}
-      <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-orange-900/15">
+      <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-[#3a2e4f]/15">
         <div>
           <h2 className="font-black text-stone-100 text-lg uppercase tracking-tight">Cargar pedido manual</h2>
           <p className="text-stone-500 text-xs mt-0.5">Se crea y confirma al instante — el stock se descuenta al guardar.</p>
@@ -482,11 +482,11 @@ function CreateManualOrderModal({
                 <label key={v} className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer
                   transition-all text-sm font-bold select-none ${
                   envio === v
-                    ? 'bg-orange-500/10 border-orange-500 text-orange-400'
-                    : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                    ? 'bg-amber-400/10 border-amber-400 text-amber-300'
+                    : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                 }`}>
                   <input type="radio" className="sr-only" checked={envio === v} onChange={() => setEnvio(v)} />
-                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${envio === v ? 'border-orange-500 bg-orange-500/60' : 'border-stone-700'}`} />
+                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${envio === v ? 'border-amber-400 bg-amber-400/60' : 'border-stone-700'}`} />
                   {label}
                 </label>
               ))}
@@ -513,11 +513,11 @@ function CreateManualOrderModal({
                 <label key={v} className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer
                   transition-all text-sm font-bold select-none ${
                   pago === v
-                    ? 'bg-orange-500/10 border-orange-500 text-orange-400'
-                    : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                    ? 'bg-amber-400/10 border-amber-400 text-amber-300'
+                    : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                 }`}>
                   <input type="radio" className="sr-only" checked={pago === v} onChange={() => setPago(v)} />
-                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${pago === v ? 'border-orange-500 bg-orange-500/60' : 'border-stone-700'}`} />
+                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${pago === v ? 'border-amber-400 bg-amber-400/60' : 'border-stone-700'}`} />
                   {v === 'efectivo' ? 'Efectivo' : 'Transferencia'}
                 </label>
               ))}
@@ -534,26 +534,26 @@ function CreateManualOrderModal({
               Sin ítems. Usá el buscador para agregar productos o combos.
             </p>
           ) : (
-            <div className="bg-[#120c06] border border-orange-900/15 rounded-xl overflow-hidden">
+            <div className="bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl overflow-hidden">
               {items.map(item => (
                 <div key={item.key}
-                  className="flex items-center gap-2 px-4 py-3 border-b border-orange-900/10 last:border-0">
+                  className="flex items-center gap-2 px-4 py-3 border-b border-[#3a2e4f]/10 last:border-0">
                   <span className="flex-1 text-sm font-bold text-stone-200 truncate min-w-0">{item.item_name}</span>
                   <span className="text-xs text-stone-600 shrink-0">${fmt(item.unit_price)}</span>
                   <div className="flex items-center gap-1 shrink-0">
                     <button onClick={() => setQty(item.key, item.quantity - 1)}
-                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      className="w-6 h-6 rounded-lg bg-[#1d1729] flex items-center justify-center
+                        text-stone-400 hover:bg-amber-400/20 hover:text-amber-300 transition-colors">
                       <Minus size={11} />
                     </button>
                     <span className="w-7 text-center font-black text-stone-100 text-sm">{item.quantity}</span>
                     <button onClick={() => setQty(item.key, item.quantity + 1)}
-                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      className="w-6 h-6 rounded-lg bg-[#1d1729] flex items-center justify-center
+                        text-stone-400 hover:bg-amber-400/20 hover:text-amber-300 transition-colors">
                       <Plus size={11} />
                     </button>
                   </div>
-                  <span className="text-sm font-bold text-orange-400 shrink-0 w-20 text-right">
+                  <span className="text-sm font-bold text-amber-300 shrink-0 w-20 text-right">
                     ${fmt(item.unit_price * item.quantity)}
                   </span>
                   <button onClick={() => removeItem(item.key)}
@@ -579,8 +579,8 @@ function CreateManualOrderModal({
                   : 'A confirmar'}
               </span>
             </div>
-            <div className="flex justify-between font-black text-orange-400 text-lg
-              border-t border-orange-900/20 pt-2 mt-1">
+            <div className="flex justify-between font-black text-amber-300 text-lg
+              border-t border-[#3a2e4f]/20 pt-2 mt-1">
               <span>Total</span>
               <span>${fmt(total)}</span>
             </div>
@@ -616,11 +616,11 @@ function CreateManualOrderModal({
           </div>
 
           {catalogResults.length > 0 && (
-            <div className="bg-[#0f0904] border border-orange-900/25 rounded-xl overflow-hidden">
+            <div className="bg-[#100c18] border border-[#3a2e4f]/25 rounded-xl overflow-hidden">
               {catalogResults.map(item => (
                 <button key={item.id} type="button" onClick={() => addCatalogItem(item)}
                   className="w-full flex items-center justify-between px-4 py-3 text-sm
-                    hover:bg-orange-500/10 transition-colors border-b border-orange-900/10 last:border-0 text-left">
+                    hover:bg-amber-400/10 transition-colors border-b border-[#3a2e4f]/10 last:border-0 text-left">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-[9px] font-black text-stone-700 uppercase shrink-0">
                       {item.type === 'product' ? 'Prod' : 'Combo'}
@@ -635,8 +635,8 @@ function CreateManualOrderModal({
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-3">
-                    <span className="text-orange-400 font-bold">${fmt(item.price)}</span>
-                    <Plus size={14} className="text-orange-500" />
+                    <span className="text-amber-300 font-bold">${fmt(item.price)}</span>
+                    <Plus size={14} className="text-amber-400" />
                   </div>
                 </button>
               ))}
@@ -647,8 +647,8 @@ function CreateManualOrderModal({
         {/* ── Acciones ── */}
         <div className="flex gap-3 pt-1">
           <button onClick={onClose} disabled={createMutation.isPending}
-            className="flex-1 py-3 rounded-xl border border-orange-900/30 text-stone-400 font-black
-              text-sm uppercase tracking-widest hover:border-orange-700/50 hover:text-stone-200
+            className="flex-1 py-3 rounded-xl border border-[#3a2e4f]/30 text-stone-400 font-black
+              text-sm uppercase tracking-widest hover:border-amber-600/50 hover:text-stone-200
               transition-all disabled:opacity-50">
             Cancelar
           </button>
@@ -656,7 +656,7 @@ function CreateManualOrderModal({
             onClick={() => createMutation.mutate()}
             disabled={!canSave}
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
-              bg-orange-600 hover:bg-orange-500 text-white font-black text-sm uppercase
+              bg-amber-500 hover:bg-amber-400 text-white font-black text-sm uppercase
               tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {createMutation.isPending
@@ -874,7 +874,7 @@ function EditOrderModal({
   return (
     <ModalOverlay onClose={onClose} wide>
       {/* Header */}
-      <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-orange-900/15">
+      <div className="px-6 pt-6 pb-3 flex items-start justify-between border-b border-[#3a2e4f]/15">
         <div>
           <h2 className="font-black text-stone-100 text-lg uppercase tracking-tight">Editar pedido</h2>
           <p className="text-stone-500 text-xs mt-0.5">Ref #{order.reference} · {order.customer_name}</p>
@@ -925,11 +925,11 @@ function EditOrderModal({
                 <label key={v} className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer
                   transition-all text-sm font-bold select-none ${
                   pago === v
-                    ? 'bg-orange-500/10 border-orange-500 text-orange-400'
-                    : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                    ? 'bg-amber-400/10 border-amber-400 text-amber-300'
+                    : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                 }`}>
                   <input type="radio" className="sr-only" checked={pago === v} onChange={() => setPago(v)} />
-                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${pago === v ? 'border-orange-500 bg-orange-500/60' : 'border-stone-700'}`} />
+                  <div className={`w-3 h-3 rounded-full border-2 shrink-0 ${pago === v ? 'border-amber-400 bg-amber-400/60' : 'border-stone-700'}`} />
                   {v === 'efectivo' ? 'Efectivo' : 'Transferencia'}
                 </label>
               ))}
@@ -946,26 +946,26 @@ function EditOrderModal({
               Sin ítems. Usá el buscador para agregar productos o combos.
             </p>
           ) : (
-            <div className="bg-[#120c06] border border-orange-900/15 rounded-xl overflow-hidden">
+            <div className="bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl overflow-hidden">
               {editItems.map(item => (
                 <div key={item.key}
-                  className="flex items-center gap-2 px-4 py-3 border-b border-orange-900/10 last:border-0">
+                  className="flex items-center gap-2 px-4 py-3 border-b border-[#3a2e4f]/10 last:border-0">
                   <span className="flex-1 text-sm font-bold text-stone-200 truncate min-w-0">{item.item_name}</span>
                   <span className="text-xs text-stone-600 shrink-0">${fmt(item.unit_price)}</span>
                   <div className="flex items-center gap-1 shrink-0">
                     <button onClick={() => setQty(item.key, item.quantity - 1)}
-                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      className="w-6 h-6 rounded-lg bg-[#1d1729] flex items-center justify-center
+                        text-stone-400 hover:bg-amber-400/20 hover:text-amber-300 transition-colors">
                       <Minus size={11} />
                     </button>
                     <span className="w-7 text-center font-black text-stone-100 text-sm">{item.quantity}</span>
                     <button onClick={() => setQty(item.key, item.quantity + 1)}
-                      className="w-6 h-6 rounded-lg bg-[#1a1008] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500/20 hover:text-orange-400 transition-colors">
+                      className="w-6 h-6 rounded-lg bg-[#1d1729] flex items-center justify-center
+                        text-stone-400 hover:bg-amber-400/20 hover:text-amber-300 transition-colors">
                       <Plus size={11} />
                     </button>
                   </div>
-                  <span className="text-sm font-bold text-orange-400 shrink-0 w-20 text-right">
+                  <span className="text-sm font-bold text-amber-300 shrink-0 w-20 text-right">
                     ${fmt(item.unit_price * item.quantity)}
                   </span>
                   <button onClick={() => removeItem(item.key)}
@@ -989,8 +989,8 @@ function EditOrderModal({
                 {order.delivery_cost > 0 ? `$${fmt(order.delivery_cost)}` : 'Gratis'}
               </span>
             </div>
-            <div className="flex justify-between font-black text-orange-400 text-lg
-              border-t border-orange-900/20 pt-2 mt-1">
+            <div className="flex justify-between font-black text-amber-300 text-lg
+              border-t border-[#3a2e4f]/20 pt-2 mt-1">
               <span>Total</span>
               <span>${fmt(total)}</span>
             </div>
@@ -1014,11 +1014,11 @@ function EditOrderModal({
           </div>
 
           {catalogResults.length > 0 && (
-            <div className="bg-[#0f0904] border border-orange-900/25 rounded-xl overflow-hidden">
+            <div className="bg-[#100c18] border border-[#3a2e4f]/25 rounded-xl overflow-hidden">
               {catalogResults.map(item => (
                 <button key={item.id} type="button" onClick={() => addCatalogItem(item)}
                   className="w-full flex items-center justify-between px-4 py-3 text-sm
-                    hover:bg-orange-500/10 transition-colors border-b border-orange-900/10 last:border-0 text-left">
+                    hover:bg-amber-400/10 transition-colors border-b border-[#3a2e4f]/10 last:border-0 text-left">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-[9px] font-black text-stone-700 uppercase shrink-0">
                       {item.type === 'product' ? 'Prod' : 'Combo'}
@@ -1033,8 +1033,8 @@ function EditOrderModal({
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-3">
-                    <span className="text-orange-400 font-bold">${fmt(item.price)}</span>
-                    <Plus size={14} className="text-orange-500" />
+                    <span className="text-amber-300 font-bold">${fmt(item.price)}</span>
+                    <Plus size={14} className="text-amber-400" />
                   </div>
                 </button>
               ))}
@@ -1048,10 +1048,10 @@ function EditOrderModal({
             <p className="text-[11px] font-black text-stone-500 uppercase tracking-widest">
               Ajuste de stock al guardar
             </p>
-            <div className="bg-[#120c06] border border-orange-900/15 rounded-xl overflow-hidden">
+            <div className="bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-orange-900/10">
+                  <tr className="border-b border-[#3a2e4f]/10">
                     {['Producto', 'Cambio', 'Stock actual', 'Resultante'].map(h => (
                       <th key={h} className={`py-2.5 px-3 text-[10px] font-black text-stone-600 uppercase tracking-wider
                         ${h === 'Producto' ? 'text-left' : 'text-right'}`}>
@@ -1065,7 +1065,7 @@ function EditOrderModal({
                     const result = line.stock - line.delta
                     const neg = result < 0
                     return (
-                      <tr key={i} className="border-b border-orange-900/10 last:border-0">
+                      <tr key={i} className="border-b border-[#3a2e4f]/10 last:border-0">
                         <td className="px-3 py-2.5 font-bold text-stone-200">{line.name}</td>
                         <td className={`px-3 py-2.5 text-right font-bold ${line.delta > 0 ? 'text-red-400' : 'text-green-400'}`}>
                           {line.delta > 0 ? `-${line.delta}` : `+${Math.abs(line.delta)}`}
@@ -1086,8 +1086,8 @@ function EditOrderModal({
         {/* ── Footer actions ── */}
         <div className="flex gap-3 pt-1">
           <button onClick={onClose} disabled={saveMutation.isPending}
-            className="flex-1 py-3 rounded-xl border border-orange-900/30 text-stone-400 font-black
-              text-sm uppercase tracking-widest hover:border-orange-700/50 hover:text-stone-200
+            className="flex-1 py-3 rounded-xl border border-[#3a2e4f]/30 text-stone-400 font-black
+              text-sm uppercase tracking-widest hover:border-amber-600/50 hover:text-stone-200
               transition-all disabled:opacity-50">
             Cancelar
           </button>
@@ -1095,7 +1095,7 @@ function EditOrderModal({
             onClick={() => saveMutation.mutate()}
             disabled={!canSave}
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
-              bg-orange-600 hover:bg-orange-500 text-white font-black text-sm uppercase
+              bg-amber-500 hover:bg-amber-400 text-white font-black text-sm uppercase
               tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saveMutation.isPending
@@ -1122,8 +1122,8 @@ function OrderCard({
   onEdit: () => void
 }) {
   return (
-    <div className={`bg-[#1a1008] border rounded-2xl overflow-hidden transition-colors ${
-      order.status === 'pending' ? 'border-yellow-900/30' : 'border-orange-900/20'
+    <div className={`bg-[#1d1729] border rounded-2xl overflow-hidden transition-colors ${
+      order.status === 'pending' ? 'border-yellow-900/30' : 'border-[#3a2e4f]/20'
     }`}>
       {/* Collapsed header */}
       <button
@@ -1133,7 +1133,7 @@ function OrderCard({
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2.5 flex-wrap mb-1">
-            <span className="font-black text-orange-400 text-sm tracking-wide">
+            <span className="font-black text-amber-300 text-sm tracking-wide">
               Ref #{order.reference}
             </span>
             <span className="text-stone-600 text-xs">{fmtDate(order.created_at)}</span>
@@ -1160,7 +1160,7 @@ function OrderCard({
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <span className="font-black text-orange-400 text-xl">${fmt(order.total)}</span>
+          <span className="font-black text-amber-300 text-xl">${fmt(order.total)}</span>
           {expanded
             ? <ChevronUp size={16} className="text-stone-600" />
             : <ChevronDown size={16} className="text-stone-600" />}
@@ -1169,12 +1169,12 @@ function OrderCard({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-orange-900/15 px-5 pb-5 pt-4 space-y-4">
+        <div className="border-t border-[#3a2e4f]/15 px-5 pb-5 pt-4 space-y-4">
           {/* Items table */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[380px]">
               <thead>
-                <tr className="border-b border-orange-900/10">
+                <tr className="border-b border-[#3a2e4f]/10">
                   <th className="py-2 text-left text-[11px] font-black text-stone-600 uppercase tracking-wider w-12">
                     Cant.
                   </th>
@@ -1191,7 +1191,7 @@ function OrderCard({
               </thead>
               <tbody>
                 {order.order_items.map(item => (
-                  <tr key={item.id} className="border-b border-orange-900/10 last:border-0">
+                  <tr key={item.id} className="border-b border-[#3a2e4f]/10 last:border-0">
                     <td className="py-2.5 text-stone-400 font-bold">{item.quantity}×</td>
                     <td className="py-2.5 text-stone-200 font-bold">{item.item_name}</td>
                     <td className="py-2.5 text-right text-stone-500">${fmt(item.unit_price)}</td>
@@ -1203,7 +1203,7 @@ function OrderCard({
           </div>
 
           {/* Totals */}
-          <div className="bg-[#120c06] border border-orange-900/15 rounded-xl p-4 space-y-1.5 text-sm">
+          <div className="bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl p-4 space-y-1.5 text-sm">
             <div className="flex justify-between text-stone-500">
               <span>Subtotal</span>
               <span className="font-bold">${fmt(order.subtotal)}</span>
@@ -1214,8 +1214,8 @@ function OrderCard({
                 {order.delivery_cost > 0 ? `$${fmt(order.delivery_cost)}` : 'Gratis'}
               </span>
             </div>
-            <div className="flex justify-between font-black text-orange-400 text-lg
-              border-t border-orange-900/20 pt-2 mt-1">
+            <div className="flex justify-between font-black text-amber-300 text-lg
+              border-t border-[#3a2e4f]/20 pt-2 mt-1">
               <span>Total</span>
               <span>${fmt(order.total)}</span>
             </div>
@@ -1223,7 +1223,7 @@ function OrderCard({
 
           {/* Comment */}
           {order.comment && (
-            <div className="flex items-start gap-2.5 bg-[#120c06] border border-orange-900/15 rounded-xl p-3.5">
+            <div className="flex items-start gap-2.5 bg-[#100c18] border border-[#3a2e4f]/15 rounded-xl p-3.5">
               <MessageSquare size={13} className="text-stone-600 shrink-0 mt-0.5" />
               <p className="text-stone-400 text-sm leading-relaxed">{order.comment}</p>
             </div>
@@ -1263,9 +1263,9 @@ function OrderCard({
               )}
               <button
                 onClick={onEdit}
-                className="flex items-center gap-2 bg-[#2a1608] hover:bg-orange-500/10
-                  border border-orange-900/30 hover:border-orange-500/40 text-stone-400
-                  hover:text-orange-400 font-black px-4 py-2.5 rounded-xl text-sm
+                className="flex items-center gap-2 bg-[#261d36] hover:bg-amber-400/10
+                  border border-[#3a2e4f]/30 hover:border-amber-400/40 text-stone-400
+                  hover:text-amber-300 font-black px-4 py-2.5 rounded-xl text-sm
                   uppercase tracking-widest transition-colors"
               >
                 <Pencil size={15} />
@@ -1417,7 +1417,7 @@ export default function AdminOrders() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white
+          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white
             font-black px-4 py-2.5 rounded-xl text-sm uppercase tracking-widest transition-colors shrink-0"
         >
           <ClipboardList size={15} />
@@ -1426,7 +1426,7 @@ export default function AdminOrders() {
       </div>
 
       {/* Status tabs */}
-      <div className="flex gap-1.5 mb-5 p-1 bg-[#1a1008] border border-orange-900/20 rounded-xl w-fit flex-wrap">
+      <div className="flex gap-1.5 mb-5 p-1 bg-[#1d1729] border border-[#3a2e4f]/20 rounded-xl w-fit flex-wrap">
         {TABS.map(({ status, label, count }) => (
           <button
             key={status}
@@ -1434,7 +1434,7 @@ export default function AdminOrders() {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-black
               uppercase tracking-widest transition-all ${
               activeTab === status
-                ? 'bg-orange-500/15 text-orange-400 border border-orange-500/20'
+                ? 'bg-amber-400/15 text-amber-300 border border-amber-400/20'
                 : 'text-stone-600 hover:text-stone-400 border border-transparent'
             }`}
           >
@@ -1461,8 +1461,8 @@ export default function AdminOrders() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Buscar por referencia o nombre del cliente..."
-          className="w-full bg-[#1a1008] border border-orange-900/20 rounded-xl pl-9 pr-9 py-2.5
-            text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm font-medium"
+          className="w-full bg-[#1d1729] border border-[#3a2e4f]/20 rounded-xl pl-9 pr-9 py-2.5
+            text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm font-medium"
         />
         {search && (
           <button onClick={() => setSearch('')}
@@ -1476,7 +1476,7 @@ export default function AdminOrders() {
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5 animate-pulse">
+            <div key={i} className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5 animate-pulse">
               <div className="flex justify-between items-start gap-4">
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center gap-3">

@@ -32,19 +32,19 @@ export default function CategoryRow({ categoryName, items }: Props) {
         <h2 className="text-lg font-black text-stone-100 uppercase tracking-widest shrink-0">
           {categoryName}
         </h2>
-        <div className="flex-1 h-px bg-gradient-to-r from-orange-900/40 to-transparent" />
+        <div className="flex-1 h-px bg-gradient-to-r from-[#3a2e4f]/40 to-transparent" />
         <button
           onClick={() => scroll('left')}
-          className="p-1.5 rounded-full border border-orange-900/30 text-stone-500
-            hover:border-orange-500/50 hover:text-orange-400 transition-all"
+          className="p-1.5 rounded-full border border-[#3a2e4f]/30 text-stone-500
+            hover:border-amber-400/50 hover:text-amber-300 transition-all"
           aria-label="Desplazar izquierda"
         >
           <ChevronLeft size={15} />
         </button>
         <button
           onClick={() => scroll('right')}
-          className="p-1.5 rounded-full border border-orange-900/30 text-stone-500
-            hover:border-orange-500/50 hover:text-orange-400 transition-all"
+          className="p-1.5 rounded-full border border-[#3a2e4f]/30 text-stone-500
+            hover:border-amber-400/50 hover:text-amber-300 transition-all"
           aria-label="Desplazar derecha"
         >
           <ChevronRight size={15} />

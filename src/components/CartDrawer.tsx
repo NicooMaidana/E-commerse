@@ -28,7 +28,7 @@ export default function CartDrawer() {
       */}
       <aside
         className={`
-          fixed z-50 bg-[#1c1108] flex flex-col shadow-2xl
+          fixed z-50 bg-[#1d1729] flex flex-col shadow-2xl
           transition-transform duration-300 ease-in-out
           /* Mobile */
           bottom-0 left-0 right-0 max-h-[88vh] rounded-t-2xl
@@ -47,8 +47,8 @@ export default function CartDrawer() {
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-orange-900/30 shrink-0">
-          <h2 className="font-black text-orange-400 uppercase tracking-widest text-sm flex items-center gap-2">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#3a2e4f]/30 shrink-0">
+          <h2 className="font-black text-amber-300 uppercase tracking-widest text-sm flex items-center gap-2">
             <ShoppingBag size={17} />
             Tu pedido
           </h2>
@@ -72,7 +72,7 @@ export default function CartDrawer() {
             items.map((item) => (
               <div
                 key={item.id}
-                className="bg-[#271608] border border-orange-900/20 rounded-xl p-3 flex gap-3"
+                className="bg-[#271608] border border-[#3a2e4f]/20 rounded-xl p-3 flex gap-3"
               >
                 {/* Thumbnail */}
                 <div className="w-14 h-14 rounded-lg bg-[#3a2010] flex-shrink-0 overflow-hidden">
@@ -98,7 +98,7 @@ export default function CartDrawer() {
                       {item.components}
                     </p>
                   )}
-                  <p className="text-orange-400 font-black text-sm mt-0.5">
+                  <p className="text-amber-300 font-black text-sm mt-0.5">
                     ${fmt(item.price * item.quantity)}
                   </p>
 
@@ -106,7 +106,7 @@ export default function CartDrawer() {
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
                       className="w-6 h-6 rounded bg-[#3a2010] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500 hover:text-white transition-colors"
+                        text-stone-400 hover:bg-amber-400 hover:text-white transition-colors"
                     >
                       <Minus size={11} />
                     </button>
@@ -116,7 +116,7 @@ export default function CartDrawer() {
                     <button
                       onClick={() => updateQuantity(item.id, 1)}
                       className="w-6 h-6 rounded bg-[#3a2010] flex items-center justify-center
-                        text-stone-400 hover:bg-orange-500 hover:text-white transition-colors"
+                        text-stone-400 hover:bg-amber-400 hover:text-white transition-colors"
                     >
                       <Plus size={11} />
                     </button>
@@ -136,12 +136,12 @@ export default function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="px-4 pb-6 pt-3 border-t border-orange-900/30 space-y-3 shrink-0">
+          <div className="px-4 pb-6 pt-3 border-t border-[#3a2e4f]/30 space-y-3 shrink-0">
             <div className="flex items-center justify-between">
               <span className="text-stone-400 font-bold text-sm uppercase tracking-wide">
                 Total
               </span>
-              <span className="text-2xl font-black text-orange-400">
+              <span className="text-2xl font-black text-amber-300">
                 ${fmt(totalPrice)}
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function CartDrawer() {
                   document.getElementById('pedido')?.scrollIntoView({ behavior: 'smooth' })
                 }, 300)
               }}
-              className="block w-full bg-orange-500 hover:bg-orange-400 text-white
+              className="block w-full bg-amber-400 hover:bg-amber-300 text-white
                 font-black py-3 rounded-xl text-center text-sm uppercase
                 tracking-widest transition-colors"
             >

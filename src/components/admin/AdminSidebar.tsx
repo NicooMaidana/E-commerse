@@ -49,16 +49,16 @@ export default function AdminSidebar({ open, onClose }: Props) {
     <aside
       className={`
         fixed md:relative inset-y-0 left-0 z-50 md:z-auto
-        w-60 shrink-0 bg-[#0d0804] border-r border-orange-900/20
+        w-60 shrink-0 bg-[#100c18] border-r border-[#3a2e4f]/20
         flex flex-col h-full
         transition-transform duration-300 ease-in-out
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}
     >
       {/* Logo + user */}
-      <div className="px-5 py-5 border-b border-orange-900/15">
+      <div className="px-5 py-5 border-b border-[#3a2e4f]/15">
         <div className="flex items-baseline gap-0.5">
-          <span className="text-xl font-black text-orange-500">Alta</span>
+          <span className="text-xl font-black text-amber-400">Alta</span>
           <span className="text-xl font-black text-yellow-400">GULA</span>
           <span className="text-[10px] font-black text-stone-600 ml-2 uppercase tracking-widest">
             Admin
@@ -82,7 +82,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold
                transition-all duration-150 ${
                 isActive
-                  ? 'bg-orange-500/15 text-orange-400 border border-orange-500/20'
+                  ? 'bg-amber-400/15 text-amber-300 border border-amber-400/20'
                   : 'text-stone-500 hover:text-stone-300 hover:bg-white/[0.03] border border-transparent'
               }`
             }
@@ -91,7 +91,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
               <>
                 <Icon
                   size={16}
-                  className={isActive ? 'text-orange-400' : 'text-stone-600'}
+                  className={isActive ? 'text-amber-300' : 'text-stone-600'}
                 />
                 <span className="flex-1">{label}</span>
                 {pendingBadge && pendingCount > 0 && (
@@ -101,7 +101,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
                   </span>
                 )}
                 {isActive && (
-                  <ChevronRight size={13} className="text-orange-700" />
+                  <ChevronRight size={13} className="text-amber-600" />
                 )}
               </>
             )}
@@ -110,7 +110,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
       </nav>
 
       {/* Sign out */}
-      <div className="px-3 pb-4 pt-3 border-t border-orange-900/15">
+      <div className="px-3 pb-4 pt-3 border-t border-[#3a2e4f]/15">
         <button
           onClick={handleSignOut}
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm

@@ -62,12 +62,12 @@ export default function AdminSettings() {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
         </div>
       ) : (
         <form
           onSubmit={(e) => { e.preventDefault(); saveMutation.mutate() }}
-          className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-6 space-y-5"
+          className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-6 space-y-5"
         >
           <Field
             label="Nombre del negocio"
@@ -121,7 +121,7 @@ export default function AdminSettings() {
             <button
               type="submit"
               disabled={saveMutation.isPending}
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400
+              className="flex items-center gap-2 bg-amber-400 hover:bg-amber-300
                 text-white font-black px-6 py-3 rounded-xl text-sm uppercase
                 tracking-widest transition-colors disabled:opacity-50"
             >
@@ -156,5 +156,5 @@ function Field({
 }
 
 const inputClass =
-  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'

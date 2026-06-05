@@ -150,11 +150,11 @@ export default function AdminBanners() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden mb-8">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden mb-8">
         {isLoading ? <Loader /> : messages.length === 0 ? <Empty text="Sin mensajes aún" /> : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-orange-900/15">
+              <tr className="border-b border-[#3a2e4f]/15">
                 {['Orden', 'Contenido', 'Activo', ''].map((h) => (
                   <th key={h} className={thClass}>{h}</th>
                 ))}
@@ -168,7 +168,7 @@ export default function AdminBanners() {
                       <button
                         onClick={() => move(i, 'up')}
                         disabled={i === 0 || reorderMutation.isPending}
-                        className="text-stone-600 hover:text-orange-400 disabled:opacity-20 transition-colors"
+                        className="text-stone-600 hover:text-amber-300 disabled:opacity-20 transition-colors"
                       >
                         <ChevronUp size={14} />
                       </button>
@@ -176,7 +176,7 @@ export default function AdminBanners() {
                       <button
                         onClick={() => move(i, 'down')}
                         disabled={i === messages.length - 1 || reorderMutation.isPending}
-                        className="text-stone-600 hover:text-orange-400 disabled:opacity-20 transition-colors"
+                        className="text-stone-600 hover:text-amber-300 disabled:opacity-20 transition-colors"
                       >
                         <ChevronDown size={14} />
                       </button>
@@ -199,7 +199,7 @@ export default function AdminBanners() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-3">
-                      <button onClick={() => openEdit(m)} className="text-stone-500 hover:text-orange-400 transition-colors">
+                      <button onClick={() => openEdit(m)} className="text-stone-500 hover:text-amber-300 transition-colors">
                         <Pencil size={15} />
                       </button>
                       <button onClick={() => setDeleting(m)} className="text-stone-500 hover:text-red-400 transition-colors">
@@ -215,15 +215,15 @@ export default function AdminBanners() {
       </div>
 
       {/* Live preview */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-orange-900/15">
-          <Eye size={14} className="text-orange-500" />
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-[#3a2e4f]/15">
+          <Eye size={14} className="text-amber-400" />
           <span className="text-[11px] font-black text-stone-600 uppercase tracking-widest">
             Preview en tiempo real
           </span>
         </div>
         {previewContent ? (
-          <div className="bg-orange-500 overflow-hidden py-2.5">
+          <div className="bg-amber-400 overflow-hidden py-2.5">
             <div className="ticker-track whitespace-nowrap" style={{ display: 'inline-block' }}>
               <span className="text-white font-black text-sm tracking-wide">
                 {previewContent}{previewContent}
@@ -263,7 +263,7 @@ export default function AdminBanners() {
               type="checkbox"
               checked={active}
               onChange={(e) => setActive(e.target.checked)}
-              className="w-4 h-4 accent-orange-500"
+              className="w-4 h-4 accent-amber-400"
             />
             <span className="text-sm text-stone-300 font-bold">Mensaje activo</span>
           </label>
@@ -302,7 +302,7 @@ export default function AdminBanners() {
 }
 
 function Loader() {
-  return <div className="flex justify-center p-12"><div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" /></div>
+  return <div className="flex justify-center p-12"><div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" /></div>
 }
 
 function Empty({ text }: { text: string }) {
@@ -310,16 +310,16 @@ function Empty({ text }: { text: string }) {
 }
 
 const thClass = 'text-left px-5 py-3 text-[11px] font-black text-stone-600 uppercase tracking-widest'
-const trClass = 'border-b border-orange-900/10 hover:bg-white/[0.015] transition-colors'
+const trClass = 'border-b border-[#3a2e4f]/10 hover:bg-white/[0.015] transition-colors'
 
 const inputClass =
-  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'
 
 const btnPrimary =
-  'flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white ' +
+  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-white ' +
   'font-black px-4 py-2 rounded-xl text-sm uppercase tracking-wide transition-colors'
 
 const btnSecondary =
-  'flex items-center gap-2 bg-[#251608] hover:bg-[#351a08] text-stone-300 ' +
-  'font-bold px-4 py-2 rounded-xl text-sm border border-orange-900/25 transition-colors'
+  'flex items-center gap-2 bg-[#261d36] hover:bg-[#351a08] text-stone-300 ' +
+  'font-bold px-4 py-2 rounded-xl text-sm border border-[#3a2e4f]/25 transition-colors'

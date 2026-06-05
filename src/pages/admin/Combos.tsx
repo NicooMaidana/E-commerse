@@ -252,11 +252,11 @@ export default function AdminCombos() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
         {isLoading ? <Loader /> : combos.length === 0 ? <Empty text="Sin combos aún" /> : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-orange-900/15">
+              <tr className="border-b border-[#3a2e4f]/15">
                 {['', 'Nombre', 'Categoría', 'Precio', 'Productos', 'Visible', ''].map((h) => (
                   <th key={h} className={thClass}>{h}</th>
                 ))}
@@ -266,7 +266,7 @@ export default function AdminCombos() {
               {combos.map((c) => (
                 <tr key={c.id} className={trClass}>
                   <td className="px-4 py-3">
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#2d1a09] shrink-0">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#261d36] shrink-0">
                       {c.images?.[0] ? (
                         <img src={c.images[0]} alt={c.name} className="w-full h-full object-cover" />
                       ) : (
@@ -280,7 +280,7 @@ export default function AdminCombos() {
                   <td className="px-5 py-3.5 text-stone-500 text-xs">
                     {c.categories?.name ?? '—'}
                   </td>
-                  <td className="px-5 py-3.5 font-black text-orange-400">
+                  <td className="px-5 py-3.5 font-black text-amber-300">
                     ${fmt(c.price)}
                   </td>
                   <td className="px-5 py-3.5">
@@ -293,7 +293,7 @@ export default function AdminCombos() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-3">
-                      <button onClick={() => openEdit(c)} className="text-stone-500 hover:text-orange-400 transition-colors">
+                      <button onClick={() => openEdit(c)} className="text-stone-500 hover:text-amber-300 transition-colors">
                         <Pencil size={15} />
                       </button>
                       <button onClick={() => setDeleting(c)} className="text-stone-500 hover:text-red-400 transition-colors">
@@ -356,8 +356,8 @@ export default function AdminCombos() {
 
           <Field label="Foto">
             <div
-              className="border-2 border-dashed border-orange-900/30 rounded-xl overflow-hidden
-                cursor-pointer hover:border-orange-500/50 transition-colors"
+              className="border-2 border-dashed border-[#3a2e4f]/30 rounded-xl overflow-hidden
+                cursor-pointer hover:border-amber-400/50 transition-colors"
               onClick={() => fileRef.current?.click()}
             >
               {previewUrl ? (
@@ -405,7 +405,7 @@ export default function AdminCombos() {
                   type="checkbox"
                   checked={form.visible}
                   onChange={(e) => setForm((f) => ({ ...f, visible: e.target.checked }))}
-                  className="w-4 h-4 accent-orange-500"
+                  className="w-4 h-4 accent-amber-400"
                 />
                 <span className="text-sm text-stone-300 font-bold">Mostrar en catálogo</span>
               </label>
@@ -413,7 +413,7 @@ export default function AdminCombos() {
           </div>
 
           {/* Product selector */}
-          <div className="border-t border-orange-900/20 pt-4 space-y-3">
+          <div className="border-t border-[#3a2e4f]/20 pt-4 space-y-3">
             <label className="block text-[11px] font-black text-stone-500 uppercase tracking-widest">
               Productos del combo *
             </label>
@@ -431,17 +431,17 @@ export default function AdminCombos() {
 
             {/* Results dropdown */}
             {searchResults.length > 0 && (
-              <div className="bg-[#0f0904] border border-orange-900/25 rounded-xl overflow-hidden">
+              <div className="bg-[#100c18] border border-[#3a2e4f]/25 rounded-xl overflow-hidden">
                 {searchResults.map((p) => (
                   <button
                     key={p.id}
                     type="button"
                     onClick={() => addProduct(p)}
                     className="w-full flex items-center justify-between px-4 py-2.5 text-sm
-                      hover:bg-orange-500/10 transition-colors text-left border-b border-orange-900/10 last:border-0"
+                      hover:bg-amber-400/10 transition-colors text-left border-b border-[#3a2e4f]/10 last:border-0"
                   >
                     <span className="font-bold text-stone-200">{p.name}</span>
-                    <span className="text-orange-400 font-black text-xs">${fmt(p.price)}</span>
+                    <span className="text-amber-300 font-black text-xs">${fmt(p.price)}</span>
                   </button>
                 ))}
               </div>
@@ -453,13 +453,13 @@ export default function AdminCombos() {
                 {comboItems.map((ci) => (
                   <div
                     key={ci.product_id}
-                    className="flex items-center gap-3 bg-[#251608] border border-orange-900/20
+                    className="flex items-center gap-3 bg-[#261d36] border border-[#3a2e4f]/20
                       rounded-xl px-3 py-2.5"
                   >
                     <span className="flex-1 text-sm font-bold text-stone-200 truncate">
                       {ci.product_name}
                     </span>
-                    <span className="text-xs text-orange-400 font-black shrink-0">
+                    <span className="text-xs text-amber-300 font-black shrink-0">
                       ${fmt(ci.price)}
                     </span>
                     <input
@@ -467,9 +467,9 @@ export default function AdminCombos() {
                       value={ci.quantity}
                       onChange={(e) => setQty(ci.product_id, parseInt(e.target.value) || 1)}
                       min="1"
-                      className="w-14 bg-[#1a1008] border border-orange-900/25 rounded-lg
+                      className="w-14 bg-[#1d1729] border border-[#3a2e4f]/25 rounded-lg
                         px-2 py-1 text-sm text-center text-stone-100 focus:outline-none
-                        focus:border-orange-500/50"
+                        focus:border-amber-400/50"
                     />
                     <button
                       type="button"
@@ -510,7 +510,7 @@ export default function AdminCombos() {
       {/* Delete confirm */}
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar combo" maxWidth="max-w-sm">
         <p className="text-stone-300 text-sm mb-5">
-          ¿Eliminás <span className="font-black text-orange-400">{deleting?.name}</span>?
+          ¿Eliminás <span className="font-black text-amber-300">{deleting?.name}</span>?
         </p>
         <div className="flex gap-3">
           <button
@@ -554,7 +554,7 @@ function VisibleBadge({ visible, onClick }: { visible: boolean; onClick: () => v
 }
 
 function Loader() {
-  return <div className="flex justify-center p-12"><div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" /></div>
+  return <div className="flex justify-center p-12"><div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" /></div>
 }
 
 function Empty({ text }: { text: string }) {
@@ -562,16 +562,16 @@ function Empty({ text }: { text: string }) {
 }
 
 const thClass = 'text-left px-5 py-3 text-[11px] font-black text-stone-600 uppercase tracking-widest'
-const trClass = 'border-b border-orange-900/10 hover:bg-white/[0.015] transition-colors'
+const trClass = 'border-b border-[#3a2e4f]/10 hover:bg-white/[0.015] transition-colors'
 
 const inputClass =
-  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'
 
 const btnPrimary =
-  'flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white ' +
+  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-white ' +
   'font-black px-4 py-2 rounded-xl text-sm uppercase tracking-wide transition-colors'
 
 const btnSecondary =
-  'flex items-center gap-2 bg-[#251608] hover:bg-[#351a08] text-stone-300 ' +
-  'font-bold px-4 py-2 rounded-xl text-sm border border-orange-900/25 transition-colors'
+  'flex items-center gap-2 bg-[#261d36] hover:bg-[#351a08] text-stone-300 ' +
+  'font-bold px-4 py-2 rounded-xl text-sm border border-[#3a2e4f]/25 transition-colors'

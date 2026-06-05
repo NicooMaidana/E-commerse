@@ -220,14 +220,14 @@ export default function AdminProducts() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
         {isLoading ? <Loader /> : displayed.length === 0 ? (
           <Empty text="Sin productos que coincidan" />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-orange-900/15">
+                <tr className="border-b border-[#3a2e4f]/15">
                   {['', 'Nombre', 'Categoría', 'Precio', 'Stock', 'Visible', ''].map((h) => (
                     <th key={h} className={thClass}>{h}</th>
                   ))}
@@ -238,7 +238,7 @@ export default function AdminProducts() {
                   <tr key={p.id} className={trClass}>
                     {/* Thumbnail */}
                     <td className="px-4 py-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#2a1608] overflow-hidden shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-[#261d36] overflow-hidden shrink-0">
                         {p.images?.[0] ? (
                           <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
                         ) : (
@@ -254,7 +254,7 @@ export default function AdminProducts() {
                     <td className="px-4 py-3 text-stone-500 text-xs">
                       {p.categories?.name ?? '—'}
                     </td>
-                    <td className="px-4 py-3 font-black text-orange-400">
+                    <td className="px-4 py-3 font-black text-amber-300">
                       ${fmt(p.price)}
                     </td>
                     <td className="px-4 py-3">
@@ -270,7 +270,7 @@ export default function AdminProducts() {
                       <div className="flex items-center justify-end gap-3">
                         <button
                           onClick={() => openEdit(p)}
-                          className="text-stone-500 hover:text-orange-400 transition-colors"
+                          className="text-stone-500 hover:text-amber-300 transition-colors"
                         >
                           <Pencil size={15} />
                         </button>
@@ -367,7 +367,7 @@ export default function AdminProducts() {
                     type="checkbox"
                     checked={form.visible}
                     onChange={(e) => setForm((f) => ({ ...f, visible: e.target.checked }))}
-                    className="w-4 h-4 accent-orange-500"
+                    className="w-4 h-4 accent-amber-400"
                   />
                   <span className="text-sm text-stone-300 font-bold">
                     Mostrar en catálogo
@@ -382,9 +382,9 @@ export default function AdminProducts() {
                 Imagen
               </label>
               <div
-                className="aspect-square bg-[#251608] border-2 border-dashed border-orange-900/30
+                className="aspect-square bg-[#261d36] border-2 border-dashed border-[#3a2e4f]/30
                   rounded-xl flex items-center justify-center overflow-hidden cursor-pointer
-                  hover:border-orange-500/40 transition-colors relative"
+                  hover:border-amber-400/40 transition-colors relative"
                 onClick={() => fileRef.current?.click()}
               >
                 {previewUrl ? (
@@ -437,7 +437,7 @@ export default function AdminProducts() {
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar producto" maxWidth="max-w-sm">
         <p className="text-stone-300 text-sm mb-5">
           ¿Eliminás{' '}
-          <span className="font-black text-orange-400">{deleting?.name}</span>?
+          <span className="font-black text-amber-300">{deleting?.name}</span>?
           Esto también lo removerá de cualquier combo.
         </p>
         <div className="flex gap-3">
@@ -488,14 +488,14 @@ function StockInput({ product }: { product: ProductRow }) {
       onBlur={save}
       onKeyDown={(e) => e.key === 'Enter' && save()}
       min="0"
-      className={`w-16 bg-[#251608] border rounded-lg px-2 py-1 text-sm text-center
+      className={`w-16 bg-[#261d36] border rounded-lg px-2 py-1 text-sm text-center
         focus:outline-none transition-colors ${
         product.stock === 0
           ? 'border-red-800/50 text-red-400'
           : product.stock <= 5
           ? 'border-yellow-800/50 text-yellow-400'
-          : 'border-orange-900/25 text-stone-200'
-      } focus:border-orange-500/50`}
+          : 'border-[#3a2e4f]/25 text-stone-200'
+      } focus:border-amber-400/50`}
     />
   )
 }
@@ -531,7 +531,7 @@ function VisibleBadge({ visible, onClick }: { visible: boolean; onClick: () => v
 function Loader() {
   return (
     <div className="flex justify-center p-12">
-      <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
     </div>
   )
 }
@@ -542,19 +542,19 @@ function Empty({ text }: { text: string }) {
 
 const thClass = 'text-left px-4 py-3 text-[11px] font-black text-stone-600 uppercase tracking-widest'
 const tdClass = 'px-4 py-3'
-const trClass = 'border-b border-orange-900/10 hover:bg-white/[0.015] transition-colors'
+const trClass = 'border-b border-[#3a2e4f]/10 hover:bg-white/[0.015] transition-colors'
 
 const inputClass =
-  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'
 
 const btnPrimary =
-  'flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white ' +
+  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-white ' +
   'font-black px-4 py-2 rounded-xl text-sm uppercase tracking-wide transition-colors'
 
 const btnSecondary =
-  'flex items-center gap-2 bg-[#251608] hover:bg-[#351a08] text-stone-300 ' +
-  'font-bold px-4 py-2 rounded-xl text-sm border border-orange-900/25 transition-colors'
+  'flex items-center gap-2 bg-[#261d36] hover:bg-[#351a08] text-stone-300 ' +
+  'font-bold px-4 py-2 rounded-xl text-sm border border-[#3a2e4f]/25 transition-colors'
 
 // suppress unused warning
 void tdClass

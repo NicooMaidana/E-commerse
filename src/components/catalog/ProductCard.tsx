@@ -35,10 +35,8 @@ export default function ProductCard({ item }: Props) {
       components: item.components,
     })
 
-    // Trigger icon spring
     setPopKey(k => k + 1)
 
-    // Launch floating particle from button center
     if (btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect()
       const id   = particleId.current++
@@ -52,16 +50,15 @@ export default function ProductCard({ item }: Props) {
   return (
     <>
       <article
-        className="bg-[#221408] border border-orange-900/20 rounded-2xl overflow-hidden
+        className="bg-[#1d1729] border border-[#3a2e4f]/30 rounded-2xl overflow-hidden
           w-44 flex-shrink-0 flex flex-col
           transition-all duration-200 ease-out
-          hover:border-orange-600/50
-          hover:shadow-lg hover:shadow-orange-500/15
-          hover:-translate-y-1
+          hover:border-amber-400
+          hover:-translate-y-0.5
           cursor-default"
       >
         {/* Image */}
-        <div className="relative h-36 bg-[#2d1a09]">
+        <div className="relative h-36 bg-[#14101c]">
           {item.image ? (
             <img
               src={item.image}
@@ -74,13 +71,13 @@ export default function ProductCard({ item }: Props) {
             </div>
           )}
 
-          {/* Stock badge */}
+          {/* Stock badge — top right */}
           <span
-            className={`absolute top-2 left-2 text-[9px] font-black px-1.5 py-0.5
+            className={`absolute top-2 right-2 text-[9px] font-black px-2 py-0.5
               rounded-full uppercase tracking-wider border ${
               item.inStock
-                ? 'bg-green-950/90 text-green-400 border-green-800/50'
-                : 'bg-red-950/90 text-red-400 border-red-800/50'
+                ? 'bg-amber-400 text-[#14101c] border-amber-300'
+                : 'bg-red-500/90 text-white border-red-400/50'
             }`}
           >
             {item.inStock ? 'EN STOCK' : 'SIN STOCK'}
@@ -89,7 +86,7 @@ export default function ProductCard({ item }: Props) {
           {/* Combo badge */}
           {item.type === 'combo' && (
             <span
-              className="absolute top-2 right-2 text-[9px] font-black px-1.5 py-0.5
+              className="absolute top-2 left-2 text-[9px] font-black px-1.5 py-0.5
                 rounded-full bg-yellow-400/15 text-yellow-300 border border-yellow-600/30
                 uppercase tracking-wider"
             >
@@ -99,34 +96,43 @@ export default function ProductCard({ item }: Props) {
         </div>
 
         {/* Body */}
-        <div className="p-3 flex flex-col gap-1 flex-1">
-          <p className="text-sm font-bold text-stone-100 leading-tight line-clamp-2">
+        <div className="p-3 flex flex-col gap-1.5 flex-1">
+          <p className="text-[13px] font-bold text-stone-100 leading-tight line-clamp-2 uppercase">
             {item.name}
           </p>
 
           {item.components && (
-            <p className="text-[10px] text-stone-600 line-clamp-2 leading-tight">
+            <p className="text-[10px] text-stone-500 line-clamp-2 leading-tight">
               {item.components}
             </p>
           )}
 
-          <div className="flex items-center justify-between mt-auto pt-2">
-            <span className="text-orange-400 font-black text-base leading-none">
-              ${fmt(item.price)}
+          <div className="mt-auto pt-2 flex flex-col gap-2">
+            <span className="text-amber-400 font-black text-base leading-none">
+              ARS$ {fmt(item.price)}
             </span>
 
-            {item.inStock && (
+            {item.inStock ? (
               <button
                 ref={btnRef}
                 onClick={handleAdd}
-                className="w-7 h-7 rounded-full bg-orange-500 hover:bg-orange-400
-                  flex items-center justify-center text-white transition-colors"
+                className="w-full py-2 rounded-xl bg-amber-400 hover:bg-amber-300
+                  text-[#14101c] text-sm font-black transition-colors
+                  flex items-center justify-center gap-1"
                 aria-label={`Agregar ${item.name} al carrito`}
               >
-                {/* key forces remount → re-triggers the CSS animation on rapid clicks */}
-                <span key={popKey} className="btn-pop flex items-center justify-center">
-                  <Plus size={16} />
+                <span key={popKey} className="btn-pop flex items-center gap-1">
+                  <Plus size={14} strokeWidth={3} />
+                  Agregar
                 </span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="w-full py-2 rounded-xl bg-[#261d36] border border-[#3a2e4f]/30
+                  text-stone-500 text-sm font-black cursor-not-allowed"
+              >
+                Sin stock
               </button>
             )}
           </div>

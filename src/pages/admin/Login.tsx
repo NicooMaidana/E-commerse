@@ -25,7 +25,7 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0904] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#100c18] flex items-center justify-center px-4">
       <Helmet>
         <title>Ingresar | Alta GULA Admin</title>
       </Helmet>
@@ -33,11 +33,11 @@ export default function AdminLogin() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14
-            rounded-2xl bg-orange-500/10 border border-orange-500/20 mb-4">
-            <Lock size={22} className="text-orange-400" />
+            rounded-2xl bg-amber-400/10 border border-amber-400/20 mb-4">
+            <Lock size={22} className="text-amber-300" />
           </div>
           <div className="text-3xl font-black leading-none">
-            <span className="text-orange-500">Alta</span>
+            <span className="text-amber-400">Alta</span>
             <span className="text-yellow-400">GULA</span>
           </div>
           <p className="text-stone-600 text-xs mt-1.5 font-black uppercase tracking-widest">
@@ -47,7 +47,7 @@ export default function AdminLogin() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-6 space-y-4"
+          className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-6 space-y-4"
         >
           <div className="space-y-1.5">
             <label className={labelClass}>Email</label>
@@ -77,7 +77,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-400 text-white font-black
+            className="w-full bg-amber-400 hover:bg-amber-300 text-white font-black
               py-3 rounded-xl text-sm uppercase tracking-widest transition-colors
               disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
@@ -91,5 +91,5 @@ export default function AdminLogin() {
 
 const labelClass = 'block text-[11px] font-black text-stone-500 uppercase tracking-widest'
 const inputClass =
-  'w-full bg-[#251608] border border-orange-900/25 rounded-xl px-4 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-4 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'

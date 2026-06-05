@@ -23,14 +23,14 @@ createRoot(document.getElementById('root')!).render(
             position="bottom-right"
             toastOptions={{
               style: {
-                background: '#1e1208',
+                background: '#1d1729',
                 color:      '#d6d3d1',
-                border:     '1px solid rgba(154,52,18,0.3)',
+                border:     '1px solid rgba(58,46,79,0.5)',
                 fontSize:   '13px',
                 fontWeight: 700,
               },
-              success: { iconTheme: { primary: '#f97316', secondary: '#1e1208' } },
-              error:   { iconTheme: { primary: '#f87171', secondary: '#1e1208' } },
+              success: { iconTheme: { primary: '#fbbf24', secondary: '#1d1729' } },
+              error:   { iconTheme: { primary: '#f87171', secondary: '#1d1729' } },
             }}
           />
         </CartProvider>

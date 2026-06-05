@@ -61,12 +61,12 @@ export default function Home() {
       </section>
 
       {/* ── 2. CATÁLOGO ── */}
-      <section id="productos" className="scroll-mt-16 border-t border-orange-900/20">
+      <section id="productos" className="scroll-mt-16 border-t border-[#3a2e4f]/20">
         <CatalogSection />
       </section>
 
       {/* ── 3. PEDIDO ── */}
-      <section id="pedido" className="scroll-mt-16 border-t border-orange-900/20">
+      <section id="pedido" className="scroll-mt-16 border-t border-[#3a2e4f]/20">
         <PedidoSection settings={settings} />
       </section>
     </>
@@ -92,13 +92,8 @@ function HeroSection({
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center py-16">
 
         <div className="space-y-7">
-          <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20
-            text-orange-400 text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full">
-            🔥 El sabor que te espera
-          </div>
-
           <h1 className="text-5xl sm:text-6xl font-black text-stone-100 leading-[1.05] tracking-tight">
-            <span className="text-orange-500">{first}</span>{' '}
+            <span className="text-amber-400">{first}</span>{' '}
             {rest.map((w, i) => (
               <span key={i} className={i % 2 === 0 ? 'text-yellow-400' : 'text-stone-100'}>
                 {w}{' '}
@@ -106,15 +101,18 @@ function HeroSection({
             ))}
           </h1>
 
-          <p className="text-stone-400 text-lg leading-relaxed max-w-md">{description}</p>
+          <p className="text-stone-400 text-lg leading-relaxed max-w-md">
+            Golosinas, bebidas, snacks y mucho más.<br />
+            Pedí por WhatsApp y recibís en minutos.
+          </p>
 
           <div className="flex flex-wrap gap-4">
             <a
               href="#productos"
               onClick={scrollTo('productos')}
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400
-                text-white font-black px-7 py-3 rounded-full uppercase tracking-widest
-                text-sm transition-all hover:shadow-lg hover:shadow-orange-500/30 active:scale-95"
+              className="flex items-center gap-2 bg-amber-400 hover:bg-amber-300
+                text-[#14101c] font-black px-7 py-3 rounded-full uppercase tracking-widest
+                text-sm transition-all hover:shadow-lg hover:shadow-amber-400/30 active:scale-95"
             >
               Ver productos <ArrowRight size={17} />
             </a>
@@ -124,8 +122,8 @@ function HeroSection({
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 border-2 border-orange-500/30
-                  hover:border-orange-500 text-orange-400 hover:text-orange-300
+                className="flex items-center gap-2 border-2 border-amber-400/30
+                  hover:border-amber-400 text-amber-300 hover:text-amber-200
                   font-black px-7 py-3 rounded-full uppercase tracking-widest
                   text-sm transition-all"
               >
@@ -138,12 +136,12 @@ function HeroSection({
         {/* Decorative logo */}
         <div className="hidden md:flex items-center justify-center">
           <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-orange-500/10 blur-3xl scale-150 pointer-events-none" />
-            <div className="relative w-72 h-72 rounded-full border border-orange-900/30 bg-[#1e1008] flex items-center justify-center">
-              <div className="w-52 h-52 rounded-full border border-orange-800/30 bg-[#261508] flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-amber-400/10 blur-3xl scale-150 pointer-events-none" />
+            <div className="relative w-72 h-72 rounded-full border border-[#3a2e4f]/30 bg-[#1d1729] flex items-center justify-center">
+              <div className="w-52 h-52 rounded-full border border-[#3a2e4f]/30 bg-[#261d36] flex items-center justify-center">
                 <div className="text-center leading-none">
                   <div className="text-7xl font-black tracking-tighter">
-                    <span className="text-orange-500">A</span>
+                    <span className="text-amber-400">A</span>
                     <span className="text-yellow-400">G</span>
                   </div>
                   <div className="text-base font-black text-stone-100 uppercase tracking-[0.25em] mt-3">
@@ -209,7 +207,7 @@ function CatalogSection() {
 
         <div className="mb-8">
           <h2 className="text-4xl font-black text-stone-100 uppercase tracking-tight">
-            Nuestros <span className="text-orange-500">productos</span>
+            Nuestros <span className="text-amber-400">productos</span>
           </h2>
           <p className="text-stone-600 text-sm mt-1">Golosinas, bebidas, snacks y combos. Todo en un solo lugar.</p>
         </div>
@@ -221,9 +219,9 @@ function CatalogSection() {
             value={search}
             onChange={(e) => { setSearch(e.target.value); setSelCat(null) }}
             placeholder="Buscar productos o combos..."
-            className="w-full bg-[#221408] border border-orange-900/25 rounded-xl
+            className="w-full bg-[#1d1729] border border-[#3a2e4f]/25 rounded-xl
               pl-11 pr-11 py-3 text-stone-100 placeholder-stone-700
-              focus:outline-none focus:border-orange-500/50 font-medium text-sm"
+              focus:outline-none focus:border-amber-400/50 font-medium text-sm"
           />
           {search && (
             <button onClick={() => setSearch('')}
@@ -251,7 +249,7 @@ function CatalogSection() {
               <div key={i} className="mb-12">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-4 w-28 bg-stone-800/80 rounded animate-pulse" />
-                  <div className="flex-1 h-px bg-orange-900/20" />
+                  <div className="flex-1 h-px bg-[#3a2e4f]/20" />
                 </div>
                 <div className="flex gap-4">
                   {Array.from({ length: 5 }).map((_, j) => <ProductCardSkeleton key={j} />)}
@@ -270,7 +268,7 @@ function CatalogSection() {
                 <p className="font-black text-lg text-stone-400">Ningún producto coincide</p>
                 <button
                   onClick={() => { setSearch(''); setSelCat(null) }}
-                  className="text-orange-400 hover:text-orange-300 font-bold text-sm underline underline-offset-4 transition-colors"
+                  className="text-amber-300 hover:text-amber-200 font-bold text-sm underline underline-offset-4 transition-colors"
                 >
                   Limpiar filtros
                 </button>
@@ -294,8 +292,8 @@ function CatalogSection() {
             <a
               href="#pedido"
               onClick={scrollTo('pedido')}
-              className="flex items-center gap-2 bg-orange-500/10 hover:bg-orange-500/20
-                border border-orange-500/25 text-orange-400 font-black px-6 py-2.5
+              className="flex items-center gap-2 bg-amber-400/10 hover:bg-amber-400/20
+                border border-amber-400/25 text-amber-300 font-black px-6 py-2.5
                 rounded-full text-sm uppercase tracking-widest transition-all"
             >
               Ir a mi pedido ↓
@@ -451,7 +449,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
 
         <div className="mb-8">
           <h2 className="text-4xl font-black text-stone-100 uppercase tracking-tight">
-            Tu <span className="text-orange-500">pedido</span>
+            Tu <span className="text-amber-400">pedido</span>
           </h2>
           <p className="text-stone-600 text-sm mt-1">
             Revisá los productos, completá tus datos y enviá por WhatsApp.
@@ -472,7 +470,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
             <a
               href="#productos"
               onClick={(e) => { setSent(false); scrollTo('productos')(e) }}
-              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400
+              className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300
                 text-white font-black px-5 py-2.5 rounded-full text-sm uppercase
                 tracking-widest transition-colors"
             >
@@ -492,8 +490,8 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
             <a
               href="#productos"
               onClick={scrollTo('productos')}
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400
-                text-white font-black px-6 py-3 rounded-full text-sm uppercase
+              className="flex items-center gap-2 bg-amber-400 hover:bg-amber-300
+                text-[#14101c] font-black px-6 py-3 rounded-full text-sm uppercase
                 tracking-widest transition-colors"
             >
               Ver productos ↑
@@ -523,7 +521,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
               <a
                 href="#productos"
                 onClick={scrollTo('productos')}
-                className="flex items-center gap-2 text-orange-400 hover:text-orange-300
+                className="flex items-center gap-2 text-amber-300 hover:text-amber-200
                   font-bold text-sm transition-colors py-1"
               >
                 <Plus size={15} />
@@ -531,7 +529,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
               </a>
 
               {/* Totals */}
-              <div className="bg-[#1e1208] border border-orange-900/20 rounded-2xl p-5 mt-2 space-y-2">
+              <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5 mt-2 space-y-2">
                 <div className="flex justify-between text-sm text-stone-400">
                   <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} productos)</span>
                   <span className="font-bold">${fmt(totalPrice)}</span>
@@ -544,8 +542,8 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
                       : 'A confirmar'}
                   </span>
                 </div>
-                <div className="flex justify-between font-black text-orange-400 text-2xl
-                  border-t border-orange-900/30 pt-2 mt-1">
+                <div className="flex justify-between font-black text-amber-300 text-2xl
+                  border-t border-[#3a2e4f]/30 pt-2 mt-1">
                   <span>TOTAL</span>
                   <span>${fmt(total)}</span>
                 </div>
@@ -582,7 +580,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
             </div>
 
             {/* ── Right: form ── */}
-            <div className="bg-[#1e1208] border border-orange-900/20 rounded-2xl p-5 space-y-5 sticky top-24">
+            <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5 space-y-5 sticky top-24">
 
               <Field label="Nombre y Apellido *">
                 <input
@@ -603,8 +601,8 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
                       className={`py-3 rounded-xl font-black text-xs uppercase tracking-widest
                         border-2 transition-all ${
                         envio === t
-                          ? 'bg-orange-500/15 border-orange-500 text-orange-400'
-                          : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                          ? 'bg-amber-400/15 border-amber-400 text-amber-300'
+                          : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                       }`}
                     >
                       {t === 'delivery' ? '🚚 Delivery' : '🏠 Retiro'}
@@ -645,15 +643,15 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
                       className={`flex items-center gap-2 p-3 rounded-xl border-2
                         cursor-pointer transition-all ${
                         pago === v
-                          ? 'bg-orange-500/10 border-orange-500 text-orange-400'
-                          : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                          ? 'bg-amber-400/10 border-amber-400 text-amber-300'
+                          : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                       }`}
                     >
                       <input type="radio" name="pago" value={v} checked={pago === v}
                         onChange={() => setPago(v)} className="sr-only" />
                       <div className={`w-3.5 h-3.5 rounded-full border-2 flex items-center
-                        justify-center shrink-0 ${pago === v ? 'border-orange-500' : 'border-stone-700'}`}>
-                        {pago === v && <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />}
+                        justify-center shrink-0 ${pago === v ? 'border-amber-400' : 'border-stone-700'}`}>
+                        {pago === v && <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
                       </div>
                       <span className="font-black text-xs">{l}</span>
                     </label>
@@ -701,11 +699,11 @@ function CartItemRow({
   onRemove: () => void
 }) {
   return (
-    <div className="bg-[#1e1208] border border-orange-900/20 rounded-2xl p-4 flex gap-4
-      hover:border-orange-900/40 transition-colors">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-4 flex gap-4
+      hover:border-[#3a2e4f]/40 transition-colors">
 
       {/* Thumbnail */}
-      <div className="w-16 h-16 rounded-xl bg-[#2d1a09] shrink-0 overflow-hidden">
+      <div className="w-16 h-16 rounded-xl bg-[#261d36] shrink-0 overflow-hidden">
         {item.image ? (
           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
         ) : (
@@ -724,23 +722,23 @@ function CartItemRow({
           <div className="flex items-center gap-2">
             <button
               onClick={onDec}
-              className="w-7 h-7 rounded-lg bg-[#2d1a09] flex items-center justify-center
-                text-stone-400 hover:bg-orange-500 hover:text-white transition-colors"
+              className="w-7 h-7 rounded-lg bg-[#261d36] flex items-center justify-center
+                text-stone-400 hover:bg-amber-400 hover:text-white transition-colors"
             >
               <Minus size={13} />
             </button>
             <span className="font-black text-stone-100 w-5 text-center">{item.quantity}</span>
             <button
               onClick={onInc}
-              className="w-7 h-7 rounded-lg bg-[#2d1a09] flex items-center justify-center
-                text-stone-400 hover:bg-orange-500 hover:text-white transition-colors"
+              className="w-7 h-7 rounded-lg bg-[#261d36] flex items-center justify-center
+                text-stone-400 hover:bg-amber-400 hover:text-white transition-colors"
             >
               <Plus size={13} />
             </button>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="font-black text-orange-400 text-base">
+            <span className="font-black text-amber-300 text-base">
               ${fmt(item.price * item.quantity)}
             </span>
             <button
@@ -770,5 +768,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const inp =
-  'w-full bg-[#2a1608] border border-orange-900/25 rounded-xl px-4 py-2.5 ' +
-  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-orange-500/50 text-sm font-medium'
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-4 py-2.5 ' +
+  'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm font-medium'

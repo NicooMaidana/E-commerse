@@ -23,7 +23,7 @@ export default function CategoryFilter({ categories, selected, onChange }: Props
       {categories.map((cat) => (
         <FilterChip
           key={cat.id}
-          initial={cat.name.charAt(0).toUpperCase()}
+          initial={cat.name.slice(0, 2).toUpperCase()}
           label={cat.name}
           active={selected === cat.id}
           onClick={() => onChange(cat.id)}
@@ -51,10 +51,10 @@ function FilterChip({
     >
       <div
         className={`w-12 h-12 rounded-full flex items-center justify-center
-          text-lg font-black border-2 transition-all duration-200 ${
+          text-sm font-black border-2 transition-all duration-200 ${
           active
-            ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
-            : 'bg-[#221408] border-orange-900/30 text-stone-400 group-hover:border-orange-500/50 group-hover:text-orange-400'
+            ? 'bg-amber-400 border-amber-400 text-[#14101c] shadow-lg shadow-amber-400/25'
+            : 'bg-[#1d1729] border-dashed border-[#3a2e4f]/70 text-stone-400 group-hover:border-amber-400/50 group-hover:text-amber-300'
         }`}
       >
         {initial}
@@ -62,7 +62,7 @@ function FilterChip({
       <span
         className={`text-[10px] font-black uppercase tracking-wide max-w-[3.5rem]
           text-center leading-tight transition-colors ${
-          active ? 'text-orange-400' : 'text-stone-600 group-hover:text-stone-400'
+          active ? 'text-amber-300' : 'text-stone-600 group-hover:text-stone-400'
         }`}
       >
         {label}

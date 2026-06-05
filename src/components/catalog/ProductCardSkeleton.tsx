@@ -1,11 +1,11 @@
 export default function ProductCardSkeleton() {
   return (
     <div
-      className="bg-[#221408] border border-orange-900/10 rounded-2xl overflow-hidden
+      className="bg-[#1d1729] border border-[#3a2e4f]/10 rounded-2xl overflow-hidden
         w-44 flex-shrink-0 animate-pulse"
     >
       {/* Image placeholder */}
-      <div className="h-36 bg-[#2a1608]" />
+      <div className="h-36 bg-[#261d36]" />
 
       {/* Content */}
       <div className="p-3 space-y-2">

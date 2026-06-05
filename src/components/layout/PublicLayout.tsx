@@ -4,7 +4,7 @@ import CartDrawer from '../CartDrawer'
 
 export default function PublicLayout() {
   return (
-    <div className="min-h-screen bg-[#1a1008] text-stone-100">
+    <div className="min-h-screen bg-[#14101c] text-stone-100">
       <Navbar />
       <CartDrawer />
       <main>

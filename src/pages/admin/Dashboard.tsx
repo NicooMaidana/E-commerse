@@ -89,8 +89,8 @@ export default function Dashboard() {
           label="Total productos"
           value={total.data}
           loading={total.isLoading}
-          icon={<Package size={20} className="text-orange-400" />}
-          color="text-orange-400"
+          icon={<Package size={20} className="text-amber-300" />}
+          color="text-amber-300"
         />
         <StatCard
           label="Sin stock"
@@ -117,9 +117,9 @@ export default function Dashboard() {
       </div>
 
       {/* Critical stock table */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-orange-900/15">
-          <TrendingDown size={16} className="text-orange-500" />
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-[#3a2e4f]/15">
+          <TrendingDown size={16} className="text-amber-400" />
           <h2 className="font-black text-stone-200 uppercase tracking-widest text-xs">
             Stock crítico (≤ 5 unidades)
           </h2>
@@ -127,7 +127,7 @@ export default function Dashboard() {
 
         {critical.isLoading ? (
           <div className="p-8 flex justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
           </div>
         ) : critical.data?.length === 0 ? (
           <p className="p-8 text-center text-stone-600 text-sm font-bold">
@@ -136,7 +136,7 @@ export default function Dashboard() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-orange-900/10">
+              <tr className="border-b border-[#3a2e4f]/10">
                 {['Producto', 'Categoría', 'Stock', ''].map((h) => (
                   <th
                     key={h}
@@ -151,7 +151,7 @@ export default function Dashboard() {
               {critical.data?.map((p) => (
                 <tr
                   key={p.id}
-                  className="border-b border-orange-900/10 hover:bg-white/[0.02] transition-colors"
+                  className="border-b border-[#3a2e4f]/10 hover:bg-white/[0.02] transition-colors"
                 >
                   <td className="px-6 py-3.5 font-bold text-stone-200">{p.name}</td>
                   <td className="px-6 py-3.5 text-stone-500">
@@ -169,7 +169,7 @@ export default function Dashboard() {
                   <td className="px-6 py-3.5">
                     <Link
                       to="/admin/productos"
-                      className="text-orange-500 hover:text-orange-400 font-bold text-xs
+                      className="text-amber-400 hover:text-amber-300 font-bold text-xs
                         uppercase tracking-wide transition-colors"
                     >
                       Editar →
@@ -201,8 +201,8 @@ function StatCard({
   linkTo?: string
 }) {
   const inner = (
-    <div className={`bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5 h-full
-      ${linkTo ? 'hover:border-orange-500/40 hover:bg-[#221508] transition-colors cursor-pointer' : ''}`}>
+    <div className={`bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5 h-full
+      ${linkTo ? 'hover:border-amber-400/40 hover:bg-[#261d36] transition-colors cursor-pointer' : ''}`}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-[11px] font-black text-stone-600 uppercase tracking-widest">
           {label}

@@ -27,12 +27,12 @@ export default function Modal({
       }}
     >
       <div
-        className={`relative bg-[#1a1008] border border-orange-900/30
+        className={`relative bg-[#1d1729] border border-[#3a2e4f]/30
           rounded-2xl w-full ${maxWidth} my-8 shadow-2xl`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-orange-900/20">
-          <h3 className="font-black text-orange-400 uppercase tracking-widest text-xs">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#3a2e4f]/20">
+          <h3 className="font-black text-amber-300 uppercase tracking-widest text-xs">
             {title}
           </h3>
           <button

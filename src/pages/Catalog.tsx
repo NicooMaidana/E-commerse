@@ -12,7 +12,7 @@ function CategoryRowSkeleton() {
     <div className="mb-12">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-4 w-28 bg-stone-800/80 rounded animate-pulse" />
-        <div className="flex-1 h-px bg-orange-900/20" />
+        <div className="flex-1 h-px bg-[#3a2e4f]/20" />
       </div>
       <div className="flex gap-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -70,7 +70,7 @@ export default function Catalog() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-black text-stone-100 uppercase tracking-tight">
-              Nuestros <span className="text-orange-500">productos</span>
+              Nuestros <span className="text-amber-400">productos</span>
             </h1>
             <p className="text-stone-600 text-sm mt-1 font-medium">
               Todo lo que necesitás, en un solo lugar.
@@ -88,9 +88,9 @@ export default function Catalog() {
               value={search}
               onChange={(e) => { setSearch(e.target.value); setSelectedCat(null) }}
               placeholder="Buscar productos o combos..."
-              className="w-full bg-[#221408] border border-orange-900/25 rounded-xl
+              className="w-full bg-[#1d1729] border border-[#3a2e4f]/25 rounded-xl
                 pl-11 pr-11 py-3 text-stone-100 placeholder-stone-700
-                focus:outline-none focus:border-orange-500/50 font-medium text-sm"
+                focus:outline-none focus:border-amber-400/50 font-medium text-sm"
             />
             {search && (
               <button
@@ -132,7 +132,7 @@ export default function Catalog() {
                   <p className="font-black text-lg text-stone-400">Ningún producto coincide</p>
                   <button
                     onClick={() => { setSearch(''); setSelectedCat(null) }}
-                    className="text-orange-400 hover:text-orange-300 font-bold text-sm
+                    className="text-amber-300 hover:text-amber-200 font-bold text-sm
                       underline underline-offset-4 transition-colors"
                   >
                     Limpiar filtros

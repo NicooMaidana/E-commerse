@@ -87,8 +87,8 @@ export default function Checkout() {
         </div>
         <button
           onClick={() => navigate('/productos')}
-          className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400
-            text-white font-black px-6 py-3 rounded-full text-sm uppercase
+          className="flex items-center gap-2 bg-amber-400 hover:bg-amber-300
+            text-[#14101c] font-black px-6 py-3 rounded-full text-sm uppercase
             tracking-widest transition-colors"
         >
           Ver productos
@@ -105,13 +105,13 @@ export default function Checkout() {
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="text-stone-500 hover:text-orange-400 transition-colors"
+            className="text-stone-500 hover:text-amber-300 transition-colors"
             aria-label="Volver"
           >
             <ArrowLeft size={22} />
           </button>
           <h1 className="text-4xl font-black text-stone-100 uppercase tracking-tight">
-            Completar <span className="text-orange-500">pedido</span>
+            Completar <span className="text-amber-400">pedido</span>
           </h1>
         </div>
 
@@ -141,8 +141,8 @@ export default function Checkout() {
                       className={`py-3 rounded-xl font-black text-xs uppercase
                         tracking-widest border-2 transition-all ${
                         envio === t
-                          ? 'bg-orange-500/15 border-orange-500 text-orange-400'
-                          : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                          ? 'bg-amber-400/15 border-amber-400 text-amber-300'
+                          : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                       }`}
                     >
                       {t === 'delivery' ? '🚚 Delivery' : '🏠 Retiro'}
@@ -187,8 +187,8 @@ export default function Checkout() {
                     className={`flex items-center gap-3 p-3 rounded-xl border-2
                       cursor-pointer transition-all ${
                       pago === value
-                        ? 'bg-orange-500/10 border-orange-500 text-orange-400'
-                        : 'bg-[#2a1608] border-orange-900/30 text-stone-500 hover:border-orange-700/50'
+                        ? 'bg-amber-400/10 border-amber-400 text-amber-300'
+                        : 'bg-[#261d36] border-[#3a2e4f]/30 text-stone-500 hover:border-amber-600/50'
                     }`}
                   >
                     <input
@@ -202,11 +202,11 @@ export default function Checkout() {
                     <div
                       className={`w-4 h-4 rounded-full border-2 flex items-center
                         justify-center shrink-0 transition-colors ${
-                        pago === value ? 'border-orange-500' : 'border-stone-700'
+                        pago === value ? 'border-amber-400' : 'border-stone-700'
                       }`}
                     >
                       {pago === value && (
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <div className="w-2 h-2 rounded-full bg-amber-400" />
                       )}
                     </div>
                     <span className="font-black text-sm">{label}</span>
@@ -230,14 +230,14 @@ export default function Checkout() {
                         <p className="text-[11px] text-stone-600 truncate">{item.components}</p>
                       )}
                     </div>
-                    <span className="text-sm font-black text-orange-400 shrink-0">
+                    <span className="text-sm font-black text-amber-300 shrink-0">
                       ${fmt(item.price * item.quantity)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-orange-900/30 pt-3 space-y-1.5 mt-1">
+              <div className="border-t border-[#3a2e4f]/30 pt-3 space-y-1.5 mt-1">
                 <div className="flex justify-between text-sm text-stone-400">
                   <span>Subtotal</span>
                   <span className="font-bold">${fmt(totalPrice)}</span>
@@ -250,7 +250,7 @@ export default function Checkout() {
                       : 'A confirmar'}
                   </span>
                 </div>
-                <div className="flex justify-between font-black text-orange-400 text-xl border-t border-orange-900/30 pt-2 mt-1">
+                <div className="flex justify-between font-black text-amber-300 text-xl border-t border-[#3a2e4f]/30 pt-2 mt-1">
                   <span>TOTAL</span>
                   <span>${fmt(total)}</span>
                 </div>
@@ -298,14 +298,14 @@ export default function Checkout() {
 }
 
 const inputClass =
-  'w-full bg-[#2a1608] border border-orange-900/25 rounded-xl ' +
+  'w-full bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl ' +
   'px-4 py-2.5 text-stone-100 placeholder-stone-700 ' +
-  'focus:outline-none focus:border-orange-500/50 text-sm font-medium'
+  'focus:outline-none focus:border-amber-400/50 text-sm font-medium'
 
 function FormCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#1e1208] border border-orange-900/20 rounded-2xl p-5 space-y-4">
-      <h2 className="text-xs font-black text-orange-400 uppercase tracking-widest">{title}</h2>
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5 space-y-4">
+      <h2 className="text-xs font-black text-amber-300 uppercase tracking-widest">{title}</h2>
       {children}
     </div>
   )

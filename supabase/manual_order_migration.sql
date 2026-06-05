@@ -1,18 +1,21 @@
 -- ── Manual order support ─────────────────────────────────────────────────────
 -- 1. Add `source` column to orders (web | manual)
--- 2. Update create_order_with_items to accept optional p_source parameter
+-- 2. Replace create_order_with_items with a version that includes p_source
+--
+-- IMPORTANT: CREATE OR REPLACE with a different parameter list creates a NEW
+-- overload instead of replacing the old one. That leaves two functions: the
+-- old (10-param, revoked) and the new (11-param). PostgreSQL then picks the
+-- revoked one for 10-arg calls → permission denied for the web checkout.
+-- The correct fix is to DROP the old signature first so only the 11-param
+-- version exists; PostgreSQL will use its default for callers that omit p_source.
 
 alter table orders
   add column if not exists source text not null default 'web';
 
--- ── Updated create_order_with_items ──────────────────────────────────────────
--- Adds optional p_source parameter (default 'web') for backward compatibility.
--- Existing callers (web checkout) continue to work without passing p_source.
-
--- Revoke old grant (signature changed) before replacing
-revoke execute on function create_order_with_items(
+-- Drop old signature so only the new one (with p_source default) exists
+drop function if exists create_order_with_items(
   text, text, text, text, text, text, numeric, numeric, numeric, jsonb
-) from anon, authenticated;
+);
 
 create or replace function create_order_with_items(
   p_reference      text,

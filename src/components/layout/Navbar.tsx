@@ -27,7 +27,7 @@ export default function Navbar() {
     : undefined
 
   return (
-    <nav className="sticky top-0 z-40 bg-[#1a1008]/95 backdrop-blur-sm border-b border-orange-900/25">
+    <nav className="sticky top-0 z-40 bg-[#1d1729]/95 backdrop-blur-sm border-b border-[#3a2e4f]/25">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
 
         {/* Logo */}
@@ -36,7 +36,7 @@ export default function Navbar() {
           onClick={scrollTo('inicio')}
           className="flex items-baseline gap-0.5 shrink-0"
         >
-          <span className="text-2xl font-black text-orange-500 tracking-tight leading-none">
+          <span className="text-2xl font-black text-amber-400 tracking-tight leading-none">
             Alta
           </span>
           <span className="text-2xl font-black text-yellow-400 tracking-tight leading-none">
@@ -56,7 +56,7 @@ export default function Navbar() {
               href={`#${id}`}
               onClick={scrollTo(id)}
               className="text-xs font-black uppercase tracking-widest
-                text-stone-400 hover:text-orange-400 transition-colors"
+                text-stone-400 hover:text-amber-300 transition-colors"
             >
               {label}
             </a>
@@ -67,7 +67,7 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-black uppercase tracking-widest
-                text-stone-400 hover:text-orange-400 transition-colors"
+                text-stone-400 hover:text-amber-300 transition-colors"
             >
               Contacto
             </a>
@@ -93,14 +93,14 @@ export default function Navbar() {
           {/* Cart → abre el drawer lateral */}
           <button
             onClick={() => setIsOpen(true)}
-            className="relative p-2 text-stone-400 hover:text-orange-400 transition-colors"
+            className="relative p-2 text-stone-400 hover:text-amber-300 transition-colors"
             aria-label="Abrir carrito"
           >
             <ShoppingCart size={22} />
             {totalItems > 0 && (
               <span
                 key={totalItems}
-                className={`absolute -top-1 -right-1 bg-orange-500 text-white
+                className={`absolute -top-1 -right-1 bg-amber-400 text-[#14101c]
                   text-[10px] font-black rounded-full w-[18px] h-[18px]
                   flex items-center justify-center leading-none
                   ${badgeBounce ? 'badge-bounce' : ''}`}

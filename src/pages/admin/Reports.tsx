@@ -69,7 +69,7 @@ interface PaymentSale  { payment_method: string; orders_count: number; revenue: 
 interface DeliverySale { delivery_type:  string; orders_count: number; revenue: number }
 interface NoSalesItem  { item_name: string; item_type: 'product' | 'combo'; stock: number | null }
 
-const PIE_COLORS = ['#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7']
+const PIE_COLORS = ['#fbbf24', '#eab308', '#22c55e', '#3b82f6', '#a855f7']
 
 // ── Preset helpers ─────────────────────────────────────────────────────────────
 
@@ -102,12 +102,12 @@ function Skeleton({ h = 'h-6', w = 'w-full' }: { h?: string; w?: string }) {
 // ── KPI card ───────────────────────────────────────────────────────────────────
 
 function KpiCard({
-  label, value, icon, loading, color = 'text-orange-400',
+  label, value, icon, loading, color = 'text-amber-300',
 }: {
   label: string; value: string; icon: React.ReactNode; loading: boolean; color?: string
 }) {
   return (
-    <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5">
       <div className="flex items-center justify-between mb-3">
         <p className="text-[11px] font-black text-stone-600 uppercase tracking-widest">{label}</p>
         {icon}
@@ -126,9 +126,9 @@ function RevenueTooltip({ active, payload, label }: {
 }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#1a1008] border border-orange-900/30 rounded-xl px-3 py-2 text-xs shadow-xl">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/30 rounded-xl px-3 py-2 text-xs shadow-xl">
       <p className="text-stone-400 mb-0.5">{label}</p>
-      <p className="font-black text-orange-400">{money(payload[0].value)}</p>
+      <p className="font-black text-amber-300">{money(payload[0].value)}</p>
     </div>
   )
 }
@@ -138,7 +138,7 @@ function CountTooltip({ active, payload, label }: {
 }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#1a1008] border border-orange-900/30 rounded-xl px-3 py-2 text-xs shadow-xl">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/30 rounded-xl px-3 py-2 text-xs shadow-xl">
       <p className="text-stone-400 mb-0.5">{label}</p>
       <p className="font-black text-stone-200">{payload[0].value} pedidos</p>
     </div>
@@ -150,9 +150,9 @@ function CountTooltip({ active, payload, label }: {
 function PieTooltip({ active, payload }: { active?: boolean; payload?: { name: string; value: number }[] }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#1a1008] border border-orange-900/30 rounded-xl px-3 py-2 text-xs shadow-xl">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/30 rounded-xl px-3 py-2 text-xs shadow-xl">
       <p className="text-stone-400 mb-0.5 capitalize">{payload[0].name}</p>
-      <p className="font-black text-orange-400">{money(payload[0].value)}</p>
+      <p className="font-black text-amber-300">{money(payload[0].value)}</p>
     </div>
   )
 }
@@ -312,8 +312,8 @@ export default function AdminReports() {
         </div>
         <button
           onClick={() => exportCsv([...topDesc, ...topAsc.filter(a => !topDesc.find(d => d.item_name === a.item_name))], range)}
-          className="flex items-center gap-2 bg-[#2a1608] hover:bg-orange-500/10 border
-            border-orange-900/30 hover:border-orange-500/40 text-stone-400 hover:text-orange-400
+          className="flex items-center gap-2 bg-[#261d36] hover:bg-amber-400/10 border
+            border-[#3a2e4f]/30 hover:border-amber-400/40 text-stone-400 hover:text-amber-300
             font-black px-4 py-2.5 rounded-xl text-sm uppercase tracking-widest transition-colors"
         >
           <Download size={15} />
@@ -322,7 +322,7 @@ export default function AdminReports() {
       </div>
 
       {/* Date range selector */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-4 space-y-3">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-4 space-y-3">
         <div className="flex flex-wrap gap-2">
           {PRESETS.map(({ key, label }) => (
             <button
@@ -331,7 +331,7 @@ export default function AdminReports() {
               className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest
                 transition-all border ${
                 preset === key
-                  ? 'bg-orange-500/15 text-orange-400 border-orange-500/30'
+                  ? 'bg-amber-400/15 text-amber-300 border-amber-400/30'
                   : 'text-stone-600 border-transparent hover:text-stone-300 hover:bg-white/[0.03]'
               }`}
             >
@@ -351,8 +351,8 @@ export default function AdminReports() {
                   const d = new Date(e.target.value + 'T00:00:00')
                   setCustom(c => ({ ...c, from: startOfDay(d) }))
                 }}
-                className="bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-1.5
-                  text-stone-100 text-sm focus:outline-none focus:border-orange-500/50"
+                className="bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-1.5
+                  text-stone-100 text-sm focus:outline-none focus:border-amber-400/50"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -364,8 +364,8 @@ export default function AdminReports() {
                   const d = new Date(e.target.value + 'T00:00:00')
                   setCustom(c => ({ ...c, to: endOfDay(d) }))
                 }}
-                className="bg-[#251608] border border-orange-900/25 rounded-xl px-3 py-1.5
-                  text-stone-100 text-sm focus:outline-none focus:border-orange-500/50"
+                className="bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl px-3 py-1.5
+                  text-stone-100 text-sm focus:outline-none focus:border-amber-400/50"
               />
             </div>
           </div>
@@ -380,7 +380,7 @@ export default function AdminReports() {
 
       {/* No-sales message */}
       {noSales && (
-        <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-12 text-center">
+        <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-12 text-center">
           <ShoppingBag size={48} className="text-stone-700 mx-auto mb-4" strokeWidth={1.5} />
           <p className="font-black text-stone-400 text-lg">Sin ventas confirmadas en este período</p>
           <p className="text-stone-600 text-sm mt-1">Probá con otro rango de fechas.</p>
@@ -393,7 +393,7 @@ export default function AdminReports() {
           label="Ingresos totales"
           value={money(summary?.total_revenue ?? 0)}
           loading={loadingSummary}
-          icon={<TrendingUp size={20} className="text-orange-400" />}
+          icon={<TrendingUp size={20} className="text-amber-300" />}
         />
         <KpiCard
           label="Pedidos confirmados"
@@ -419,13 +419,13 @@ export default function AdminReports() {
       </div>
 
       {/* Revenue chart */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5">
         <h2 className="font-black text-stone-300 text-sm uppercase tracking-widest mb-5">
           Ingresos por día
         </h2>
         {loadingByDay ? (
           <div className="h-52 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
           </div>
         ) : chartData.length === 0 ? (
           <div className="h-52 flex items-center justify-center text-stone-600 text-sm font-bold">
@@ -446,7 +446,7 @@ export default function AdminReports() {
                   axisLine={false} tickLine={false} width={52}
                 />
                 <Tooltip content={<RevenueTooltip />} cursor={{ fill: 'rgba(249,115,22,0.06)' }} />
-                <Bar dataKey="revenue" fill="#f97316" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="#fbbf24" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -454,13 +454,13 @@ export default function AdminReports() {
       </div>
 
       {/* Orders-per-day chart */}
-      <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5">
+      <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5">
         <h2 className="font-black text-stone-300 text-sm uppercase tracking-widest mb-5">
           Pedidos por día
         </h2>
         {loadingByDay ? (
           <div className="h-40 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
           </div>
         ) : chartData.length === 0 ? (
           <div className="h-40 flex items-center justify-center text-stone-600 text-sm font-bold">
@@ -524,8 +524,8 @@ function ProductTable({
   loading: boolean
 }) {
   return (
-    <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-orange-900/15">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-[#3a2e4f]/15">
         <h2 className="font-black text-stone-300 text-sm uppercase tracking-widest">{title}</h2>
       </div>
       {loading ? (
@@ -543,7 +543,7 @@ function ProductTable({
       ) : (
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-orange-900/10">
+            <tr className="border-b border-[#3a2e4f]/10">
               <th className="text-left px-5 py-2.5 text-[10px] font-black text-stone-600 uppercase tracking-wider">Producto</th>
               <th className="text-right px-5 py-2.5 text-[10px] font-black text-stone-600 uppercase tracking-wider">Unidades</th>
               <th className="text-right px-5 py-2.5 text-[10px] font-black text-stone-600 uppercase tracking-wider">Ingresos</th>
@@ -551,12 +551,12 @@ function ProductTable({
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i} className="border-b border-orange-900/10 last:border-0 hover:bg-white/[0.02] transition-colors">
+              <tr key={i} className="border-b border-[#3a2e4f]/10 last:border-0 hover:bg-white/[0.02] transition-colors">
                 <td className="px-5 py-2.5 font-bold text-stone-200 max-w-[160px] truncate">
                   <span title={r.item_name}>{r.item_name}</span>
                 </td>
                 <td className="px-5 py-2.5 text-right text-stone-400 font-bold">{r.units_sold}</td>
-                <td className="px-5 py-2.5 text-right text-orange-400 font-bold">{money(r.revenue)}</td>
+                <td className="px-5 py-2.5 text-right text-amber-300 font-bold">{money(r.revenue)}</td>
               </tr>
             ))}
           </tbody>
@@ -573,9 +573,9 @@ function NoSalesCard({ rows, loading, isError }: { rows: NoSalesItem[]; loading:
   const combos   = rows.filter(r => r.item_type === 'combo')
 
   return (
-    <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl overflow-hidden">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-orange-900/15 flex items-center gap-3">
+      <div className="px-5 py-4 border-b border-[#3a2e4f]/15 flex items-center gap-3">
         <h2 className="font-black text-stone-300 text-sm uppercase tracking-widest">
           Sin ventas en el período
         </h2>
@@ -618,7 +618,7 @@ function NoSalesCard({ rows, loading, isError }: { rows: NoSalesItem[]; loading:
           </p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-orange-900/15">
+        <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#3a2e4f]/15">
           {/* Products column */}
           <div className="p-5">
             <p className="text-[11px] font-black text-stone-600 uppercase tracking-widest mb-3">
@@ -685,11 +685,11 @@ function PieCard({
   loading: boolean
 }) {
   return (
-    <div className="bg-[#1a1008] border border-orange-900/20 rounded-2xl p-5">
+    <div className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-5">
       <h2 className="font-black text-stone-300 text-sm uppercase tracking-widest mb-4">{title}</h2>
       {loading ? (
         <div className="flex justify-center py-10">
-          <div className="w-8 h-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
         </div>
       ) : data.length === 0 ? (
         <p className="text-center text-stone-600 text-sm font-bold py-10">Sin datos</p>
