@@ -656,7 +656,7 @@ function CreateManualOrderModal({
             onClick={() => createMutation.mutate()}
             disabled={!canSave}
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
-              bg-amber-500 hover:bg-amber-400 text-white font-black text-sm uppercase
+              bg-amber-500 hover:bg-amber-400 text-[#14101c] font-black text-sm uppercase
               tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {createMutation.isPending
@@ -1095,7 +1095,7 @@ function EditOrderModal({
             onClick={() => saveMutation.mutate()}
             disabled={!canSave}
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
-              bg-amber-500 hover:bg-amber-400 text-white font-black text-sm uppercase
+              bg-amber-500 hover:bg-amber-400 text-[#14101c] font-black text-sm uppercase
               tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saveMutation.isPending
@@ -1417,7 +1417,7 @@ export default function AdminOrders() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-white
+          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-[#14101c]
             font-black px-4 py-2.5 rounded-xl text-sm uppercase tracking-widest transition-colors shrink-0"
         >
           <ClipboardList size={15} />

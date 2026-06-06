@@ -30,7 +30,6 @@ const fmt = (n: number) => n.toLocaleString('es-AR', { minimumFractionDigits: 0 
    ════════════════════════════════════════ */
 export default function Home() {
   const { data: settings } = useSettings()
-  const storeName   = settings?.store_name || 'Alta GULA Delivery'
   const whatsappUrl = settings?.whatsapp_number
     ? `https://wa.me/${settings.whatsapp_number}`
     : undefined
@@ -41,9 +40,9 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>{storeName} | Pedí ahora</title>
+        <title>Alta GULA Delivery | Pedí ahora</title>
         <meta name="description" content={description} />
-        <meta property="og:title"       content={`${storeName} | Pedí ahora`} />
+        <meta property="og:title"       content="Alta GULA Delivery | Pedí ahora" />
         <meta property="og:description" content={description} />
         <meta property="og:image"       content="/og-image.png" />
         <meta property="og:type"        content="website" />
@@ -54,7 +53,6 @@ export default function Home() {
       <section id="inicio" className="scroll-mt-16">
         <Ticker />
         <HeroSection
-          storeName={storeName}
           whatsappUrl={whatsappUrl}
         />
       </section>
@@ -76,26 +74,19 @@ export default function Home() {
    SECTION 1 — Hero
    ════════════════════════════════════════ */
 function HeroSection({
-  storeName,
   whatsappUrl,
 }: {
-  storeName: string
   whatsappUrl?: string
 }) {
-  const [first, ...rest] = storeName.split(' ')
-
   return (
     <div className="min-h-[calc(100vh-4rem-40px)] flex items-center px-4 sm:px-6">
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center py-16">
 
         <div className="space-y-7">
           <h1 className="text-5xl sm:text-6xl font-black text-stone-100 leading-[1.05] tracking-tight">
-            <span className="text-amber-400">{first}</span>{' '}
-            {rest.map((w, i) => (
-              <span key={i} className={i % 2 === 0 ? 'text-yellow-400' : 'text-stone-100'}>
-                {w}{' '}
-              </span>
-            ))}
+            <span className="text-amber-400">Alta</span>{' '}
+            <span className="text-yellow-400">GULA</span>{' '}
+            <span className="text-stone-100">Delivery</span>
           </h1>
 
           <p className="text-stone-400 text-lg leading-relaxed max-w-md">
@@ -323,10 +314,10 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
   const [pago,       setPago]       = useState<PagoType>('efectivo')
   const [sent,       setSent]       = useState(false)
 
-  const deliveryCost = parseFloat(settings?.delivery_cost ?? '') || 0
-  const minOrder     = parseFloat(settings?.min_order ?? '') || 0
-  const storeName    = settings?.store_name || 'Alta GULA Delivery'
-  const waNumber     = settings?.whatsapp_number ?? ''
+  const deliveryCost  = parseFloat(settings?.delivery_cost ?? '') || 0
+  const minOrder      = parseFloat(settings?.min_order ?? '') || 0
+  const waNumber      = settings?.whatsapp_number ?? ''
+  const orderMessage  = settings?.order_message ?? ''
 
   const shippingCost = envio === 'delivery' ? deliveryCost : 0
   const total        = totalPrice + shippingCost
@@ -373,9 +364,10 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
         ? `${EM.pkg} Envio: $${fmt(deliveryCost)}`
         : `${EM.pkg} Envio: a confirmar`
     const header = reference
-      ? `${EM.bag} *Pedido ${storeName}*  ${EM.dot}  Ref #${reference}`
-      : `${EM.bag} *Pedido ${storeName}*`
+      ? `${EM.bag} *Pedido*  ${EM.dot}  Ref #${reference}`
+      : `${EM.bag} *Pedido*`
     return [
+      ...(orderMessage.trim() ? [orderMessage.trim(), ''] : []),
       header, '',
       `${EM.person} ${nombre}`, envioLine,
       `${EM.card} ${pago === 'efectivo' ? 'Efectivo' : 'Transferencia'}`, '',

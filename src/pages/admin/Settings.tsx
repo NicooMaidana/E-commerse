@@ -9,14 +9,14 @@ interface FormState {
   whatsapp_number: string
   delivery_cost: string
   min_order: string
-  store_name: string
+  order_message: string
 }
 
 const EMPTY: FormState = {
   whatsapp_number: '',
   delivery_cost: '',
   min_order: '',
-  store_name: '',
+  order_message: '',
 }
 
 export default function AdminSettings() {
@@ -28,19 +28,16 @@ export default function AdminSettings() {
     if (settings) setForm(settings)
   }, [settings])
 
-  const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
+  const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }))
 
   const saveMutation = useMutation({
     mutationFn: async () => {
       const entries = Object.entries(form) as [string, string][]
-      for (const [key, value] of entries) {
-        const { error } = await supabase
-          .from('settings')
-          .update({ value })
-          .eq('key', key)
-        if (error) throw error
-      }
+      const { error } = await supabase
+        .from('settings')
+        .upsert(entries.map(([key, value]) => ({ key, value })), { onConflict: 'key' })
+      if (error) throw error
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['settings'] })
@@ -69,18 +66,6 @@ export default function AdminSettings() {
           onSubmit={(e) => { e.preventDefault(); saveMutation.mutate() }}
           className="bg-[#1d1729] border border-[#3a2e4f]/20 rounded-2xl p-6 space-y-5"
         >
-          <Field
-            label="Nombre del negocio"
-            hint="Aparece en el mensaje de WhatsApp al cliente"
-          >
-            <input
-              value={form.store_name}
-              onChange={set('store_name')}
-              placeholder="Alta GULA Delivery"
-              className={inputClass}
-            />
-          </Field>
-
           <Field
             label="Número de WhatsApp"
             hint="Formato internacional sin + ni espacios: 549XXXXXXXXXX"
@@ -117,12 +102,25 @@ export default function AdminSettings() {
             </Field>
           </div>
 
+          <Field
+            label="Mensaje predeterminado del pedido"
+            hint="Aparece al inicio del mensaje de WhatsApp enviado al negocio"
+          >
+            <textarea
+              value={form.order_message}
+              onChange={set('order_message')}
+              placeholder="Hola! Quiero hacer el siguiente pedido:"
+              rows={3}
+              className={inputClass + ' resize-none'}
+            />
+          </Field>
+
           <div className="pt-2">
             <button
               type="submit"
               disabled={saveMutation.isPending}
               className="flex items-center gap-2 bg-amber-400 hover:bg-amber-300
-                text-white font-black px-6 py-3 rounded-xl text-sm uppercase
+                text-[#14101c] font-black px-6 py-3 rounded-xl text-sm uppercase
                 tracking-widest transition-colors disabled:opacity-50"
             >
               <Save size={16} />

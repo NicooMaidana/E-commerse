@@ -21,10 +21,10 @@ export default function Checkout() {
   const [comentario,setComentario]= useState('')
   const [pago,      setPago]      = useState<PagoType>('efectivo')
 
-  const deliveryCost = parseFloat(settings?.delivery_cost ?? '') || 0
-  const minOrder     = parseFloat(settings?.min_order ?? '') || 0
-  const storeName    = settings?.store_name || 'Alta GULA Delivery'
-  const waNumber     = settings?.whatsapp_number ?? ''
+  const deliveryCost  = parseFloat(settings?.delivery_cost ?? '') || 0
+  const minOrder      = parseFloat(settings?.min_order ?? '') || 0
+  const waNumber      = settings?.whatsapp_number ?? ''
+  const orderMessage  = settings?.order_message ?? ''
 
   const shippingCost = envio === 'delivery' ? deliveryCost : 0
   const total        = totalPrice + shippingCost
@@ -52,7 +52,8 @@ export default function Checkout() {
       : '📦 Envío: a confirmar'
 
     return [
-      `🛍️ *Pedido ${storeName}*`,
+      ...(orderMessage.trim() ? [orderMessage.trim(), ''] : []),
+      `🛍️ *Pedido*`,
       '',
       `👤 ${nombre}`,
       envioLine,
@@ -66,7 +67,7 @@ export default function Checkout() {
       '',
       `💬 ${comentario.trim() || 'Sin comentarios'}`,
     ].join('\n')
-  }, [items, nombre, envio, direccion, pago, comentario, deliveryCost, total, storeName])
+  }, [items, nombre, envio, direccion, pago, comentario, deliveryCost, total, orderMessage])
 
   const handleSubmit = () => {
     if (!canSubmit) return

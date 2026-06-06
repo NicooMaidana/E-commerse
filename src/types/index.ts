@@ -51,7 +51,7 @@ export interface Settings {
   whatsapp_number: string
   delivery_cost: string
   min_order: string
-  store_name: string
+  order_message: string
 }
 
 export interface CartItem {

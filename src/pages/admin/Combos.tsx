@@ -569,7 +569,7 @@ const inputClass =
   'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'
 
 const btnPrimary =
-  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-white ' +
+  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#14101c] ' +
   'font-black px-4 py-2 rounded-xl text-sm uppercase tracking-wide transition-colors'
 
 const btnSecondary =

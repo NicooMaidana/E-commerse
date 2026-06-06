@@ -17,7 +17,7 @@ export function useSettings() {
           '',
         delivery_cost: map.delivery_cost ?? '',
         min_order:     map.min_order ?? '',
-        store_name:    map.store_name ?? '',
+        order_message: map.order_message ?? '',
       }
     },
   })

@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { supabase } from '../../lib/supabase'
 import Modal from '../../components/ui/Modal'
+import Ticker from '../../components/Ticker'
 import type { TickerMessage } from '../../types'
 
 /* ── component ── */
@@ -128,10 +129,6 @@ export default function AdminBanners() {
 
   /* preview text from active messages */
   const activeMessages = messages.filter((m) => m.active)
-  const previewText = activeMessages.map((m) => m.content).join('   ★   ')
-  const previewContent = previewText
-    ? Array(4).fill(previewText).join('   ★   ') + '   ★   '
-    : null
 
   return (
     <div className="p-8">
@@ -222,14 +219,8 @@ export default function AdminBanners() {
             Preview en tiempo real
           </span>
         </div>
-        {previewContent ? (
-          <div className="bg-amber-400 overflow-hidden py-2.5">
-            <div className="ticker-track whitespace-nowrap" style={{ display: 'inline-block' }}>
-              <span className="text-white font-black text-sm tracking-wide">
-                {previewContent}{previewContent}
-              </span>
-            </div>
-          </div>
+        {activeMessages.length > 0 ? (
+          <Ticker />
         ) : (
           <p className="text-center text-stone-700 text-xs font-bold py-4">
             Sin mensajes activos para previsualizar
@@ -317,7 +308,7 @@ const inputClass =
   'text-stone-100 placeholder-stone-700 focus:outline-none focus:border-amber-400/50 text-sm'
 
 const btnPrimary =
-  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-white ' +
+  'flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#14101c] ' +
   'font-black px-4 py-2 rounded-xl text-sm uppercase tracking-wide transition-colors'
 
 const btnSecondary =
