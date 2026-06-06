@@ -52,6 +52,8 @@ export interface Settings {
   delivery_cost: string
   min_order: string
   order_message: string
+  instagram_url: string
+  facebook_url: string
 }
 
 export interface CartItem {

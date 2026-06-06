@@ -460,7 +460,7 @@ function PedidoSection({ settings }: { settings: ReturnType<typeof useSettings>[
               href="#productos"
               onClick={(e) => { setSent(false); scrollTo('productos')(e) }}
               className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300
-                text-white font-black px-5 py-2.5 rounded-full text-sm uppercase
+                text-[#14101c] font-black px-5 py-2.5 rounded-full text-sm uppercase
                 tracking-widest transition-colors"
             >
               Hacer otro pedido ↑

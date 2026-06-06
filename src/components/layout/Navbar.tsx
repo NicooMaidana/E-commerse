@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { ShoppingCart, MessageCircle } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
+import { FaWhatsapp } from 'react-icons/fa'
 import { useCart } from '../../context/CartContext'
 import { useSettings } from '../../hooks/useSettings'
 
@@ -61,17 +62,6 @@ export default function Navbar() {
               {label}
             </a>
           ))}
-          {whatsappUrl && (
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-black uppercase tracking-widest
-                text-stone-400 hover:text-amber-300 transition-colors"
-            >
-              Contacto
-            </a>
-          )}
         </div>
 
         {/* Actions */}
@@ -85,7 +75,7 @@ export default function Navbar() {
                 text-white text-xs font-black px-3 py-1.5 rounded-full uppercase
                 tracking-wide transition-colors"
             >
-              <MessageCircle size={14} />
+              <FaWhatsapp size={14} />
               WhatsApp
             </a>
           )}

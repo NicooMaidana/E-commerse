@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Save } from 'lucide-react'
+import { Save, MessageCircle } from 'lucide-react'
+import { FaInstagram, FaFacebook } from 'react-icons/fa'
 import toast from 'react-hot-toast'
 import { supabase } from '../../lib/supabase'
 import { useSettings } from '../../hooks/useSettings'
@@ -10,6 +11,8 @@ interface FormState {
   delivery_cost: string
   min_order: string
   order_message: string
+  instagram_url: string
+  facebook_url: string
 }
 
 const EMPTY: FormState = {
@@ -17,6 +20,8 @@ const EMPTY: FormState = {
   delivery_cost: '',
   min_order: '',
   order_message: '',
+  instagram_url: '',
+  facebook_url: '',
 }
 
 export default function AdminSettings() {
@@ -114,6 +119,46 @@ export default function AdminSettings() {
               className={inputClass + ' resize-none'}
             />
           </Field>
+
+          <div className="border-t border-[#3a2e4f]/20 pt-5">
+            <p className="text-[11px] font-black text-stone-500 uppercase tracking-widest mb-4">
+              Redes Sociales
+            </p>
+            <div className="space-y-4">
+              <Field label="Instagram" hint="URL completa — dejar vacío para no mostrar">
+                <div className="relative">
+                  <FaInstagram size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-600" />
+                  <input
+                    value={form.instagram_url}
+                    onChange={set('instagram_url')}
+                    placeholder="https://instagram.com/altagula"
+                    className={inputClass + ' pl-8'}
+                  />
+                </div>
+              </Field>
+
+              <Field label="Facebook" hint="URL completa — dejar vacío para no mostrar">
+                <div className="relative">
+                  <FaFacebook size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-600" />
+                  <input
+                    value={form.facebook_url}
+                    onChange={set('facebook_url')}
+                    placeholder="https://facebook.com/altagula"
+                    className={inputClass + ' pl-8'}
+                  />
+                </div>
+              </Field>
+
+              <Field label="WhatsApp en el footer" hint="Se muestra automáticamente si el número de WhatsApp está configurado">
+                <div className="flex items-center gap-2 px-3 py-2.5 bg-[#261d36] border border-[#3a2e4f]/25 rounded-xl">
+                  <MessageCircle size={14} className="text-stone-600" />
+                  <span className="text-sm text-stone-500">
+                    {form.whatsapp_number ? `wa.me/${form.whatsapp_number}` : 'Sin número configurado'}
+                  </span>
+                </div>
+              </Field>
+            </div>
+          </div>
 
           <div className="pt-2">
             <button

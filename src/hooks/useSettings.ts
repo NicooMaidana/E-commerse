@@ -15,9 +15,11 @@ export function useSettings() {
           map.whatsapp_number ||
           (import.meta.env.VITE_WHATSAPP_NUMBER as string) ||
           '',
-        delivery_cost: map.delivery_cost ?? '',
-        min_order:     map.min_order ?? '',
-        order_message: map.order_message ?? '',
+        delivery_cost:  map.delivery_cost ?? '',
+        min_order:      map.min_order ?? '',
+        order_message:  map.order_message ?? '',
+        instagram_url:  map.instagram_url ?? '',
+        facebook_url:   map.facebook_url ?? '',
       }
     },
   })
